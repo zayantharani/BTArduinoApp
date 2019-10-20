@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
@@ -38,7 +39,8 @@ public class ledControl extends AppCompatActivity {
     BluetoothSocket btSocket = null;
     private boolean isBtConnected = false;
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
+    InputStream inputStream;
+    OutputStream outputStream;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,16 +103,20 @@ public class ledControl extends AppCompatActivity {
         });
 
         new Thread(new Runnable() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void run() {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 byte[] buffer = new byte[1024];
                 int bytes;
                 try {
-                    bytes=btSocket.getInputStream().read(buffer);
+                    bytes=inputStream.read(buffer);
                     Log.d("tester", String.valueOf(bytes));
-                    Log.d("tester2", getString(btSocket.getInputStream()));
-                    Log.d("tester3",buffer.toString());
+//                    Log.d("tester2", getString(btSocket.getInputStream()));
+                    Log.d("tester3",""+buffer.toString());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -118,6 +124,7 @@ public class ledControl extends AppCompatActivity {
         }).start();
     }
     // Function to convert an Input Stream to String in Java
+//    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String getString(InputStream in) throws IOException
     {
@@ -138,7 +145,7 @@ public class ledControl extends AppCompatActivity {
     private void sendSignal ( String number ) {
         if ( btSocket != null ) {
             try {
-                btSocket.getOutputStream().write(number.toString().getBytes());
+                outputStream.write(number.toString().getBytes());
             } catch (IOException e) {
                 msg("Error");
             }
@@ -187,6 +194,9 @@ public class ledControl extends AppCompatActivity {
                     btSocket = dispositivo.createInsecureRfcommSocketToServiceRecord(myUUID);
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
                     btSocket.connect();
+                    inputStream=btSocket.getInputStream();
+                    outputStream=btSocket.getOutputStream();
+
                 }
             } catch (IOException e) {
                 ConnectSuccess = false;
