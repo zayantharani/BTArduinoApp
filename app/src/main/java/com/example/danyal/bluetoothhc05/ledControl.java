@@ -112,14 +112,18 @@ public class ledControl extends AppCompatActivity {
                 }
                 byte[] buffer = new byte[1024];
                 int bytes;
-                try {
-                    bytes=inputStream.read(buffer);
-                    Log.d("tester", String.valueOf(bytes));
+                while(true) {
+
+                    try {
+                        bytes = inputStream.read(buffer);
+                        Log.d("tester", String.valueOf(bytes));
 //                    Log.d("tester2", getString(btSocket.getInputStream()));
-                    Log.d("tester3",""+buffer.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                        Log.d("tester3", "" + buffer.toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
+
             }
         }).start();
     }
