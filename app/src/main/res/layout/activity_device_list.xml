@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/holo_blue_light"
-                android:text="Pair"
+                android:text="Show Paired"
                 tools:layout_editor_absoluteX="190dp"
                 tools:layout_editor_absoluteY="183dp" />
         </LinearLayout>

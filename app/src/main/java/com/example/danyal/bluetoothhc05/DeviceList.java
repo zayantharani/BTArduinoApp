@@ -76,6 +76,7 @@ public class DeviceList extends AppCompatActivity {
             Intent i = new Intent(DeviceList.this, ledControl.class);
             i.putExtra(EXTRA_ADDRESS, address);
             startActivity(i);
+            finish();
         }
     };
 }
