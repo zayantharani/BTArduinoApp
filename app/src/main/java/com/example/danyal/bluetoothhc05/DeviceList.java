@@ -2,9 +2,13 @@ package com.example.danyal.bluetoothhc05;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,11 +23,15 @@ import java.util.Set;
 public class DeviceList extends AppCompatActivity {
 
     Button btnPaired;
-    ListView devicelist;
+    ListView visibleDevices;
 
-    private BluetoothAdapter myBluetooth = null;
+    private BluetoothAdapter bluetoothAdapter = null;
     private Set<BluetoothDevice> pairedDevices;
     public static String EXTRA_ADDRESS = "device_address";
+    final BroadcastReceiver mReceiver =new MyBroadcastReceiver();
+
+    private BroadcastReceiver blueReceiver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,27 +39,74 @@ public class DeviceList extends AppCompatActivity {
         setContentView(R.layout.activity_device_list);
 
         btnPaired = (Button) findViewById(R.id.button);
-        devicelist = (ListView) findViewById(R.id.listView);
+        visibleDevices = (ListView) findViewById(R.id.listView);
 
-        myBluetooth = BluetoothAdapter.getDefaultAdapter();
-        if ( myBluetooth==null ) {
-            Toast.makeText(getApplicationContext(), "Bluetooth device not available", Toast.LENGTH_LONG).show();
-            finish();
-        } else if ( !myBluetooth.isEnabled() ) {
-            Intent turnBTon = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(turnBTon, 1);
-        }
-
-        btnPaired.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pairedDevicesList();
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        bluetoothAdapter.enable();
+        if (bluetoothAdapter != null) {
+            if (bluetoothAdapter.isEnabled()) {
+                bluetoothAdapter.startDiscovery();
             }
-        });
+
+            btnPaired.setOnClickListener(new View.OnClickListener() {
+
+
+                @Override
+                public void onClick(View v) {
+//                    pairedDevicesList();
+//                    Toast.makeText(DeviceList.this, "Looking for available devices 1", Toast.LENGTH_SHORT).show();
+//                    Log.d("BT: " , "Looking for available devices 1");
+//
+//
+//                    final ArrayList<String> devices = new ArrayList<>();
+//                    final ArrayAdapter<String> theAdapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1, devices);
+//                    visibleDevices.setAdapter(theAdapter);
+//                    blueReceiver = new BroadcastReceiver() {
+//                        @Override
+//                        public void onReceive(Context context, Intent intent) {
+//                            String action = intent.getAction();
+//                            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+//                                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+//                                if (state == BluetoothAdapter.STATE_ON) {
+//                                    bluetoothAdapter.startDiscovery();
+//                                } else if (state == BluetoothAdapter.STATE_OFF) {
+//                                    devices.clear();
+//                                    theAdapter.notifyDataSetChanged();
+//                                }
+//                            } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+//                                Boolean repeated = false;
+//                                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+//                                String deviceInfo = device.getName() + "\n" + device.getAddress();
+//                                for (String x : devices) {
+//                                    if (x.equals(deviceInfo)) {
+//                                        repeated = true;
+//                                        break;
+//                                    }
+//                                }
+//                                if (!repeated)
+//                                    devices.add(deviceInfo);
+//                                theAdapter.notifyDataSetChanged();
+//                            } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action))
+//                                devices.clear();
+//                        }
+//                    };
+                }
+            });
+
+//            IntentFilter filter = new IntentFilter();
+//            filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+//            filter.addAction(BluetoothDevice.ACTION_FOUND);
+//            filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+//            registerReceiver(blueReceiver, filter);
+        }
     }
 
+
     private void pairedDevicesList () {
-        pairedDevices = myBluetooth.getBondedDevices();
+//        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+//        registerReceiver(mReceiver, filter);
+
+        pairedDevices = bluetoothAdapter.getBondedDevices();
         ArrayList list = new ArrayList();
 
         if ( pairedDevices.size() > 0 ) {
@@ -63,9 +118,10 @@ public class DeviceList extends AppCompatActivity {
         }
 
         final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-        devicelist.setAdapter(adapter);
-        devicelist.setOnItemClickListener(myListClickListener);
+        visibleDevices.setAdapter(adapter);
+        visibleDevices.setOnItemClickListener(myListClickListener);
     }
+
 
     private AdapterView.OnItemClickListener myListClickListener = new AdapterView.OnItemClickListener() {
         @Override

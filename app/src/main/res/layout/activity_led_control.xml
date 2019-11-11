@@ -41,40 +41,39 @@
 
     <TextView
         android:id="@+id/tempTextView"
-        android:layout_width="194dp"
-        android:layout_height="49dp"
+        android:layout_width="183dp"
+        android:layout_height="74dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        android:fontFamily="sans-serif-condensed-medium"
         android:gravity="center"
-        android:text="Room Temperature"
+        android:text="-"
+        android:textSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.459"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.408" />
+        app:layout_constraintVertical_bias="0.348" />
 
     <EditText
         android:id="@+id/deltaTEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="147dp"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        android:gravity="center"
         android:hint="Choose delta T"
+        android:inputType="numberDecimal"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tempTextView"
-        app:layout_constraintVertical_bias="0.328" />
+        app:layout_constraintVertical_bias="0.377" />
 
     <Button
         android:id="@+id/zeroButton"
@@ -87,23 +86,24 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:text="0 Degree"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/oneButton"
+        app:layout_constraintHorizontal_bias="0.448"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/deltaTEditText"
-        android:visibility="invisible"/>
+        app:layout_constraintVertical_bias="0.285" />
 
     <Button
         android:id="@+id/oneButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="56dp"
-        android:layout_marginRight="56dp"
+        android:layout_marginEnd="36dp"
         android:layout_marginBottom="8dp"
         android:text="45 Degree"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/sendSignalButton"
         app:layout_constraintEnd_toStartOf="@+id/twoButton"
         app:layout_constraintTop_toBottomOf="@+id/deltaTEditText" />
 
@@ -112,14 +112,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
         android:layout_marginBottom="8dp"
         android:text="90 Degree"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/deltaTEditText"
-        android:visibility="invisible"/>
+        app:layout_constraintVertical_bias="0.285" />
 
     <Switch
         android:id="@+id/onOffSwitch"
@@ -159,13 +160,11 @@
 
     <EditText
         android:id="@+id/setTempEditText"
-        android:layout_width="101dp"
-        android:layout_height="41dp"
+        android:layout_width="157dp"
+        android:layout_height="51dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="center"
         android:hint="Set Temperature"
@@ -173,5 +172,19 @@
         app:layout_constraintBottom_toTopOf="@+id/deltaTEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tempTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/tempTextView"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/sendSignalButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Send Signal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

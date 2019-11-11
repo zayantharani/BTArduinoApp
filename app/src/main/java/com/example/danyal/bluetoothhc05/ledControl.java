@@ -33,13 +33,14 @@ import java.util.UUID;
 
 public class ledControl extends AppCompatActivity {
 
-    Button autoButton, manualButton, zeroButton, oneButton, twoButton;
+    Button autoButton, manualButton, zeroButton, oneButton, twoButton, sendSignalButton;
     String address = null;
     TextView tempTextView;
     EditText deltaTEditText, setTempEditText;
     ImageView bluetoothImageView;
     static Context context;
-    static int mode;
+    static char oppMode;
+    static char wingDirection;
 
     private ProgressDialog progress;
     Switch onOffSwitch;
@@ -64,6 +65,7 @@ public class ledControl extends AppCompatActivity {
         zeroButton = (Button) findViewById(R.id.zeroButton);
         oneButton = (Button) findViewById(R.id.oneButton);
         twoButton= (Button) findViewById(R.id.twoButton);
+        sendSignalButton = (Button) findViewById(R.id.sendSignalButton);
         tempTextView = (TextView) findViewById(R.id.tempTextView);
         deltaTEditText = (EditText) findViewById(R.id.deltaTEditText);
         bluetoothImageView = (ImageView) findViewById(R.id.bluetoothImageView);
@@ -95,8 +97,8 @@ public class ledControl extends AppCompatActivity {
             @Override
             public void onClick (View v) {
                 if (switchIsChecked){
-                    mode = 0;
-                    autoButton.setEnabled(false);
+                    String tempEditText=setTempEditText.getText().toString();
+                    oppMode = '0';
                     manualButton.setEnabled(true);
                     deltaTEditText.setVisibility(View.VISIBLE);
                     autoButton.setBackgroundColor(Color.GRAY);
@@ -105,6 +107,7 @@ public class ledControl extends AppCompatActivity {
                     oneButton.setVisibility(View.INVISIBLE);
                     twoButton.setVisibility(View.INVISIBLE);
                     tempTextView.setText("");
+                    wingDirection = '2';
 
 
                 }
@@ -119,7 +122,7 @@ public class ledControl extends AppCompatActivity {
                 if (switchIsChecked){
                     manualButton.setEnabled(false);
                     autoButton.setEnabled(true);
-                    mode = 1;
+                    oppMode = '1';
                     manualButton.setBackgroundColor(Color.GRAY);
                     autoButton.setBackgroundResource(android.R.drawable.btn_default);
                     deltaTEditText.setVisibility(View.INVISIBLE);
@@ -140,15 +143,8 @@ public class ledControl extends AppCompatActivity {
         zeroButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                if (switchIsChecked){
-                    String tempEditText=setTempEditText.getText().toString();
-                    if(tempEditText.length()>1){
-                        char b[] = {'<','1', '1', tempEditText.charAt(0), tempEditText.charAt(1),'0','-','>'};
-                        sendSignal(b);
-                    }else{
-                        Toast.makeText(ledControl.this, "Please Set A Temperature", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                if (switchIsChecked)
+                    wingDirection = '0';
                 else
                     Toast.makeText(ledControl.this, "Please turn on the device", Toast.LENGTH_SHORT).show();
 
@@ -158,15 +154,8 @@ public class ledControl extends AppCompatActivity {
         oneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                if (switchIsChecked){
-                    String tempEditText=setTempEditText.getText().toString();
-                    if(tempEditText.length()>1){
-                        char b[] = {'<','1', '1', tempEditText.charAt(0), tempEditText.charAt(1),'1','-','>'};
-                        sendSignal(b);
-                    }else{
-                        Toast.makeText(ledControl.this, "Please Set A Temperature", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                if (switchIsChecked)
+                    wingDirection = '1';
                 else
                     Toast.makeText(ledControl.this, "Please turn on the device", Toast.LENGTH_SHORT).show();
             }
@@ -175,21 +164,36 @@ public class ledControl extends AppCompatActivity {
         twoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
+
+                if (switchIsChecked)
+                    wingDirection = '1';
+                else
+                    Toast.makeText(ledControl.this, "Please turn on the device", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        sendSignalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
                 if (switchIsChecked){
+
                     String tempEditText=setTempEditText.getText().toString();
                     if(tempEditText.length()>1){
-                        char b[] = {'<','1', '1', tempEditText.charAt(0), tempEditText.charAt(1),'2','-','>'};
+                        char b[] = {'<','1', oppMode, tempEditText.charAt(0), tempEditText.charAt(1),wingDirection,'-','>'};
                         sendSignal(b);
-                    }else{
+                        msg("Signal Sent");
+                    }
+                    else{
                         Toast.makeText(ledControl.this, "Please Set A Temperature", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else
                     Toast.makeText(ledControl.this, "Please turn on the device", Toast.LENGTH_SHORT).show();
+
             }
         });
-
-//        char abc[]={0x10};
 
         new Thread(new Runnable() {
             @Override
@@ -226,44 +230,52 @@ public class ledControl extends AppCompatActivity {
                                 });
                             }
                             else {
+                                String rtp = Character.toString(mData.charAt(3)) + Character.toString(mData.charAt(4));
+                                try{
+                                    int roomTemp = Integer.parseInt(rtp);
+                                    Log.d("RTP: ", Integer.toString(roomTemp));
+                                    Log.d("Comparison", Character.compare(mData.charAt(2),'0') + "");
+                                    if (Character.compare(mData.charAt(2),'0') == 0) {
+
+
+
+                                        if (setTempEditText.getText().toString().length() > 1 && deltaTEditText.getText().toString().length() >= 1) {
+
+                                            int setTemp = Integer.parseInt(setTempEditText.getText().toString());
+                                            Log.d("Set Temp: ", Integer.toString(setTemp));
+                                            int deltaTemp = Integer.parseInt(deltaTEditText.getText().toString());
+                                            Log.d("delta Temp: ", Integer.toString(deltaTemp));
+
+                                            if ((roomTemp - setTemp) > deltaTemp)
+                                                wingDirection = '2';
+
+                                            else if ((roomTemp - setTemp) == 0)
+                                                wingDirection = '0';
+
+                                            else if ((roomTemp - setTemp) <= deltaTemp)
+                                                wingDirection = '1';
+
+                                        }
+                                    }
+                                }
+                                catch (Exception e){
+                                    Log.e("Unable to convert", e.getMessage());
+                                }
+
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        tempTextView.setText("Room Temperature: "+filterData.charAt(3)+filterData.charAt(4)+"°C");
+                                        tempTextView.setText("" + filterData.charAt(3) + filterData.charAt(4) + "°C");
                                     }
                                 });
-                                if (mData.charAt(2) == '0') {
-                                    int roomTemp = Integer.parseInt(mData.charAt(3) + mData.charAt(4) + "");
-                                    int setTemp = Integer.parseInt(setTempEditText.getText().toString());
-                                    int deltaTemp = Integer.parseInt(deltaTEditText.getText().toString());
-
-                                    if ((roomTemp - setTemp) > deltaTemp) {
-                                        String tempEditText = setTempEditText.getText().toString();
-                                        char b[] = {'<','1', '0', tempEditText .charAt(0), tempEditText .charAt(1),'2','-','>'};
-                                        sendSignal(b);
-                                    } else if ((roomTemp - setTemp) == 0) {
-                                        String tempEditText = setTempEditText.getText().toString();
-                                        char b[] = {'<','1', '0', tempEditText .charAt(0), tempEditText .charAt(1),'0','-','>'};
-                                        sendSignal(b);
-                                    } else if ((roomTemp - setTemp) <= deltaTemp) {
-                                        String tempEditText = setTempEditText.getText().toString();
-                                        char b[] = {'<','1', '0', tempEditText .charAt(0), tempEditText .charAt(1),'1','-','>'};
-                                        sendSignal(b);
-                                    }
-
-                                }
                             }
 
                             mData="";
 
+
                         }else{
-//                            filterData=mData;
                             mData+=data;
                         }
-
-
-
-//                        filterData = data.substring(0,2);
 
 
                     } catch (IOException e) {
@@ -316,15 +328,6 @@ public class ledControl extends AppCompatActivity {
 
         }
 
-//    private void receiveSignal ( String number ) {
-//        if ( btSocket != null ) {
-//            try {
-//                btSocket.getOutputStream().write(number.toString().getBytes());
-//            } catch (IOException e) {
-//                msg("Error");
-//            }
-//        }
-//    }
     private void Disconnect () {
         if ( btSocket!=null ) {
             try {
