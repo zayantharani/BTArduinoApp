@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".SettingsActivity"></activity>
         <activity android:name=".DeviceList">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,15 +21,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ledControl"></activity>
-        <receiver android:name=".MyBroadcastReceiver" >
+        <activity android:name=".ledControl" />
+
+        <receiver android:name=".MyBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
                 <action android:name="android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED" />
                 <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
                 <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
                 <action android:name="android.bluetooth.device.action.FOUND" />
-
             </intent-filter>
         </receiver>
     </application>

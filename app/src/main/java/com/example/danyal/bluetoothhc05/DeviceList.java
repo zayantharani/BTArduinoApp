@@ -53,58 +53,16 @@ public class DeviceList extends AppCompatActivity {
 
                 @Override
                 public void onClick(View v) {
-//                    pairedDevicesList();
-//                    Toast.makeText(DeviceList.this, "Looking for available devices 1", Toast.LENGTH_SHORT).show();
-//                    Log.d("BT: " , "Looking for available devices 1");
-//
-//
-//                    final ArrayList<String> devices = new ArrayList<>();
-//                    final ArrayAdapter<String> theAdapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1, devices);
-//                    visibleDevices.setAdapter(theAdapter);
-//                    blueReceiver = new BroadcastReceiver() {
-//                        @Override
-//                        public void onReceive(Context context, Intent intent) {
-//                            String action = intent.getAction();
-//                            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-//                                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-//                                if (state == BluetoothAdapter.STATE_ON) {
-//                                    bluetoothAdapter.startDiscovery();
-//                                } else if (state == BluetoothAdapter.STATE_OFF) {
-//                                    devices.clear();
-//                                    theAdapter.notifyDataSetChanged();
-//                                }
-//                            } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-//                                Boolean repeated = false;
-//                                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-//                                String deviceInfo = device.getName() + "\n" + device.getAddress();
-//                                for (String x : devices) {
-//                                    if (x.equals(deviceInfo)) {
-//                                        repeated = true;
-//                                        break;
-//                                    }
-//                                }
-//                                if (!repeated)
-//                                    devices.add(deviceInfo);
-//                                theAdapter.notifyDataSetChanged();
-//                            } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action))
-//                                devices.clear();
-//                        }
-//                    };
+                    pairedDevicesList();
                 }
             });
 
-//            IntentFilter filter = new IntentFilter();
-//            filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-//            filter.addAction(BluetoothDevice.ACTION_FOUND);
-//            filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-//            registerReceiver(blueReceiver, filter);
+
         }
     }
 
 
     private void pairedDevicesList () {
-//        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-//        registerReceiver(mReceiver, filter);
 
         pairedDevices = bluetoothAdapter.getBondedDevices();
         ArrayList list = new ArrayList();
