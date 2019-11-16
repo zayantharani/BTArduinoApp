@@ -29,14 +29,23 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
+
+import pl.pawelkleczkowski.customgauge.CustomGauge;
 
 public class ledControl extends AppCompatActivity {
 
     Button autoButton, manualButton, zeroButton, oneButton, twoButton, sendSignalButton;
     String address = null;
     TextView tempTextView;
-    EditText deltaTEditText, setTempEditText;
+    CustomGauge cg1;
+    ImageView btnInc, btnDec;
+    TextView tv_temp;
+    int initial_temp_val = 24;
+    EditText deltaTEditText;
+    TextView setTempTextView;
     ImageView bluetoothImageView;
     static Context context;
     static char oppMode;
@@ -60,19 +69,73 @@ public class ledControl extends AppCompatActivity {
 
         setContentView(R.layout.activity_led_control);
 
-        autoButton = (Button) findViewById(R.id.autoButton);
-        manualButton = (Button) findViewById(R.id.manualButton);
+        autoButton = (Button) findViewById(R.id.btn_auto);
+        manualButton = (Button) findViewById(R.id.btn_manual);
         zeroButton = (Button) findViewById(R.id.zeroButton);
         oneButton = (Button) findViewById(R.id.oneButton);
         twoButton= (Button) findViewById(R.id.twoButton);
+        cg1 = findViewById(R.id.gauge1);
+        btnInc = findViewById(R.id.btnIncrease);
+        btnDec = findViewById(R.id.btnDecrease);
+
         sendSignalButton = (Button) findViewById(R.id.sendSignalButton);
-        tempTextView = (TextView) findViewById(R.id.tempTextView);
-        deltaTEditText = (EditText) findViewById(R.id.deltaTEditText);
-        bluetoothImageView = (ImageView) findViewById(R.id.bluetoothImageView);
+        tempTextView = (TextView) findViewById(R.id.tv_currentTemp); //Receiving
+//        deltaTEditText = (EditText) findViewById(R.id.deltaTEditText);
+        bluetoothImageView = findViewById(R.id.bluetoothImageview);
         onOffSwitch = (Switch) findViewById(R.id.onOffSwitch);
-        setTempEditText = (EditText) findViewById(R.id.setTempEditText);
+        setTempTextView =  findViewById(R.id.tv_ac_temp); //Sending
 
         new ConnectBT().execute();
+
+
+        cg1.setPointSize(0);
+        cg1.setSweepAngle(270);
+
+        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
+        cg1.setPointEndColor(Color.parseColor("#FF0000"));
+        cg1.setPointSize((initial_temp_val-15) * 18);
+        setTempTextView.setText(initial_temp_val + "");
+
+        cg1.setVisibility(View.INVISIBLE);
+        cg1.setVisibility(View.VISIBLE);
+
+
+        btnInc.setClickable(true);
+        btnDec.setClickable(true);
+
+        btnInc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().trim());
+                c_temp_val++;
+                if(c_temp_val<=30){
+                    setTempTextView.setText(c_temp_val+"");
+                    int x = cg1.getPointSize() + 18;
+                    cg1.setPointSize(x);
+                    cg1.setPointStartColor(Color.parseColor("#00FF2B"));
+                    cg1.setPointEndColor(Color.parseColor("#FF0000"));
+                    cg1.setVisibility(View.INVISIBLE);
+                    cg1.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        btnDec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().trim());
+                c_temp_val--;
+                if(c_temp_val>=15) {
+                    setTempTextView.setText(c_temp_val +"");
+                    int x = cg1.getPointSize() - 18;
+                    cg1.setPointSize(x);
+                    cg1.setPointStartColor(Color.parseColor("#00FF2B"));
+                    cg1.setPointEndColor(Color.parseColor("#FF0000"));
+
+                    cg1.setVisibility(View.INVISIBLE);
+                    cg1.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -93,11 +156,25 @@ public class ledControl extends AppCompatActivity {
             }
         });
 
+        //Asking for temp from device
+        Timer timerObj = new Timer();
+        TimerTask timerTaskObj = new TimerTask() {
+            public void run() {
+                if (switchIsChecked)
+                {
+                    char b[] = {'<','1', oppMode, '?', '?',wingDirection,'-','>'};
+                    sendSignal(b);
+                    msg("Signal Sent");
+                }
+            }
+        };
+        timerObj.schedule(timerTaskObj, 0, 15000);
+
         autoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
                 if (switchIsChecked){
-                    String tempEditText=setTempEditText.getText().toString();
+                    String tempEditText= setTempTextView.getText().toString();
                     oppMode = '0';
                     manualButton.setEnabled(true);
                     deltaTEditText.setVisibility(View.VISIBLE);
@@ -179,11 +256,29 @@ public class ledControl extends AppCompatActivity {
 
                 if (switchIsChecked){
 
-                    String tempEditText=setTempEditText.getText().toString();
+                    String tempEditText= setTempTextView.getText().toString();
                     if(tempEditText.length()>1){
                         char b[] = {'<','1', oppMode, tempEditText.charAt(0), tempEditText.charAt(1),wingDirection,'-','>'};
                         sendSignal(b);
                         msg("Signal Sent");
+
+
+                        sendSignalButton.setEnabled(false);
+
+                        Timer buttonTimer = new Timer();
+                        buttonTimer.schedule(new TimerTask() {
+
+                            @Override
+                            public void run() {
+                                runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        sendSignalButton.setEnabled(true);
+                                    }
+                                });
+                            }
+                        }, 5000);
                     }
                     else{
                         Toast.makeText(ledControl.this, "Please Set A Temperature", Toast.LENGTH_SHORT).show();
@@ -231,6 +326,7 @@ public class ledControl extends AppCompatActivity {
                             }
                             else {
                                 String rtp = Character.toString(mData.charAt(3)) + Character.toString(mData.charAt(4));
+                                initial_temp_val = Integer.parseInt(rtp);
                                 try{
                                     int roomTemp = Integer.parseInt(rtp);
                                     Log.d("RTP: ", Integer.toString(roomTemp));
@@ -239,9 +335,9 @@ public class ledControl extends AppCompatActivity {
 
 
 
-                                        if (setTempEditText.getText().toString().length() > 1 && deltaTEditText.getText().toString().length() >= 1) {
+                                        if (setTempTextView.getText().toString().length() > 1 && deltaTEditText.getText().toString().length() >= 1) {
 
-                                            int setTemp = Integer.parseInt(setTempEditText.getText().toString());
+                                            int setTemp = Integer.parseInt(setTempTextView.getText().toString());
                                             Log.d("Set Temp: ", Integer.toString(setTemp));
                                             int deltaTemp = Integer.parseInt(deltaTEditText.getText().toString());
                                             Log.d("delta Temp: ", Integer.toString(deltaTemp));
