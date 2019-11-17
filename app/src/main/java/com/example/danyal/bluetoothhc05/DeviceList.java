@@ -67,13 +67,24 @@ public class DeviceList extends AppCompatActivity {
         pairedDevices = bluetoothAdapter.getBondedDevices();
         ArrayList list = new ArrayList();
 
-        if ( pairedDevices.size() > 0 ) {
-            for ( BluetoothDevice bt : pairedDevices ) {
-                list.add(bt.getName().toString() + "\n" + bt.getAddress().toString());
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
+        if (SettingsActivity.deviceList.size() == 0){
+            Intent intent = new Intent(DeviceList.this, SettingsActivity.class);
+            startActivity(intent);
+
+            Toast.makeText(this, "Please register a device first", Toast.LENGTH_LONG).show();
         }
+
+        else{
+            if ( pairedDevices.size() > 0 ) {
+                for ( BluetoothDevice bt : pairedDevices ) {
+                    if (SettingsActivity.deviceList.equals(bt.getName().toLowerCase()))
+                        list.add(bt.getName().toString() + "\n" + bt.getAddress().toString());
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
+            }
+        }
+
 
         final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
         visibleDevices.setAdapter(adapter);

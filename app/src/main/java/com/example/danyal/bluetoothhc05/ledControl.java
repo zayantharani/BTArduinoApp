@@ -35,6 +35,8 @@ import java.util.UUID;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
 
+//TODO: Change the logic of deltaEditText
+
 public class ledControl extends AppCompatActivity {
 
     Button autoButton, manualButton, zeroButton, oneButton, twoButton, sendSignalButton;
@@ -44,12 +46,13 @@ public class ledControl extends AppCompatActivity {
     ImageView btnInc, btnDec;
     TextView tv_temp;
     int initial_temp_val = 24;
-    EditText deltaTEditText;
+//    EditText deltaTEditText;
     TextView setTempTextView;
-    ImageView bluetoothImageView;
+    ImageView bluetoothImageView, settingsImageView;
     static Context context;
     static char oppMode;
     static char wingDirection;
+    int roomTemp;
 
     private ProgressDialog progress;
     Switch onOffSwitch;
@@ -77,6 +80,7 @@ public class ledControl extends AppCompatActivity {
         cg1 = findViewById(R.id.gauge1);
         btnInc = findViewById(R.id.btnIncrease);
         btnDec = findViewById(R.id.btnDecrease);
+        settingsImageView = findViewById(R.id.settingsImageView);
 
         sendSignalButton = (Button) findViewById(R.id.sendSignalButton);
         tempTextView = (TextView) findViewById(R.id.tv_currentTemp); //Receiving
@@ -137,6 +141,15 @@ public class ledControl extends AppCompatActivity {
             }
         });
 
+        settingsImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ledControl.this, SettingsActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -177,7 +190,7 @@ public class ledControl extends AppCompatActivity {
                     String tempEditText= setTempTextView.getText().toString();
                     oppMode = '0';
                     manualButton.setEnabled(true);
-                    deltaTEditText.setVisibility(View.VISIBLE);
+//                    deltaTEditText.setVisibility(View.VISIBLE);
                     autoButton.setBackgroundColor(Color.GRAY);
                     manualButton.setBackgroundResource(android.R.drawable.btn_default);
                     zeroButton.setVisibility(View.INVISIBLE);
@@ -202,7 +215,7 @@ public class ledControl extends AppCompatActivity {
                     oppMode = '1';
                     manualButton.setBackgroundColor(Color.GRAY);
                     autoButton.setBackgroundResource(android.R.drawable.btn_default);
-                    deltaTEditText.setVisibility(View.INVISIBLE);
+//                    deltaTEditText.setVisibility(View.INVISIBLE);
                     zeroButton.setVisibility(View.VISIBLE);
                     oneButton.setVisibility(View.VISIBLE);
                     twoButton.setVisibility(View.VISIBLE);
@@ -326,32 +339,43 @@ public class ledControl extends AppCompatActivity {
                             }
                             else {
                                 String rtp = Character.toString(mData.charAt(3)) + Character.toString(mData.charAt(4));
-                                initial_temp_val = Integer.parseInt(rtp);
+                                try {
+                                    initial_temp_val = Integer.parseInt(rtp);
+
+
+                                }
+                                catch (Exception e){
+                                    Log.e("Exception",e.getMessage());
+                                }
                                 try{
-                                    int roomTemp = Integer.parseInt(rtp);
+                                    roomTemp = Integer.parseInt(rtp);
+
+                                    if (SettingsActivity.tempUnit == 1)
+                                        roomTemp = (roomTemp * 9/5) + 32;
+
                                     Log.d("RTP: ", Integer.toString(roomTemp));
                                     Log.d("Comparison", Character.compare(mData.charAt(2),'0') + "");
                                     if (Character.compare(mData.charAt(2),'0') == 0) {
 
 
 
-                                        if (setTempTextView.getText().toString().length() > 1 && deltaTEditText.getText().toString().length() >= 1) {
-
-                                            int setTemp = Integer.parseInt(setTempTextView.getText().toString());
-                                            Log.d("Set Temp: ", Integer.toString(setTemp));
-                                            int deltaTemp = Integer.parseInt(deltaTEditText.getText().toString());
-                                            Log.d("delta Temp: ", Integer.toString(deltaTemp));
-
-                                            if ((roomTemp - setTemp) > deltaTemp)
-                                                wingDirection = '2';
-
-                                            else if ((roomTemp - setTemp) == 0)
-                                                wingDirection = '0';
-
-                                            else if ((roomTemp - setTemp) <= deltaTemp)
-                                                wingDirection = '1';
-
-                                        }
+//                                        if (setTempTextView.getText().toString().length() > 1 && deltaTEditText.getText().toString().length() >= 1) {
+//
+//                                            int setTemp = Integer.parseInt(setTempTextView.getText().toString());
+//                                            Log.d("Set Temp: ", Integer.toString(setTemp));
+//                                            int deltaTemp = Integer.parseInt(deltaTEditText.getText().toString());
+//                                            Log.d("delta Temp: ", Integer.toString(deltaTemp));
+//
+//                                            if ((roomTemp - setTemp) > deltaTemp)
+//                                                wingDirection = '2';
+//
+//                                            else if ((roomTemp - setTemp) == 0)
+//                                                wingDirection = '0';
+//
+//                                            else if ((roomTemp - setTemp) <= deltaTemp)
+//                                                wingDirection = '1';
+//
+//                                        }
                                     }
                                 }
                                 catch (Exception e){
@@ -361,7 +385,10 @@ public class ledControl extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        tempTextView.setText("" + filterData.charAt(3) + filterData.charAt(4) + "°C");
+                                        if (SettingsActivity.tempUnit == 0)
+                                            tempTextView.setText(roomTemp + "°C");
+                                        else
+                                            tempTextView.setText(roomTemp + "°F");
                                     }
                                 });
                             }
@@ -437,7 +464,7 @@ public class ledControl extends AppCompatActivity {
     }
 
     private void msg (String s) {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+      Log.i("Message:", s);
     }
 
     private class ConnectBT extends AsyncTask<Void, Void, Void> {

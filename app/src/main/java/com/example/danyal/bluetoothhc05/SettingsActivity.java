@@ -25,13 +25,25 @@ public class SettingsActivity extends AppCompatActivity {
     EditText etNewDeviceName;
     ImageView btnAddNewDevice;
     RecyclerView rvRegisteredDevices;
-    ArrayList<Device> deviceList = new ArrayList<>();
+    static ArrayList<Device> deviceList = new ArrayList<>();
     MyListAdapter adapter;
+    static int tempUnit = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         rgTemperatureUnit = findViewById(R.id.rg_temp_units);
+
+        rgTemperatureUnit.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (i == R.id.rb_celcius)
+                    tempUnit = 0;
+                else
+                    tempUnit = 1;
+
+            }
+        });
         rbSelectedRadio = findViewById(rgTemperatureUnit.getCheckedRadioButtonId());
         //do your operations with "rbSelectedRadio" now
         etNewDeviceName = findViewById(R.id.et_new_device_name);
@@ -45,7 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //update the list view here
-                String devicename = etNewDeviceName.getText().toString();
+                String devicename = etNewDeviceName.getText().toString().toLowerCase();
                 if(!devicename.isEmpty()) {
                     deviceList.add(new Device(devicename));
                     adapter.notifyChange();

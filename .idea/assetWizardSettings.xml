@@ -117,8 +117,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_bluetooth_connected" />
-                            <entry key="sourceFile" value="C:\Users\Zayan\Downloads\bluetooth (1).svg" />
+                            <entry key="outputName" value="ic_settings_gears" />
+                            <entry key="sourceFile" value="C:\Users\Zayan\Downloads\settings-gears.svg" />
                           </map>
                         </option>
                       </PersistentState>
