@@ -38,9 +38,14 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if (i == R.id.rb_celcius)
+                {
+                    //Change the tempEditText's unit ASAP
                     tempUnit = 0;
+                }
                 else
-                    tempUnit = 1;
+                {
+
+                }
 
             }
         });

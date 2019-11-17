@@ -190,13 +190,12 @@ public class ledControl extends AppCompatActivity {
                     String tempEditText= setTempTextView.getText().toString();
                     oppMode = '0';
                     manualButton.setEnabled(true);
+                    autoButton.setEnabled(false);
+
 //                    deltaTEditText.setVisibility(View.VISIBLE);
-                    autoButton.setBackgroundColor(Color.GRAY);
-                    manualButton.setBackgroundResource(android.R.drawable.btn_default);
                     zeroButton.setVisibility(View.INVISIBLE);
                     oneButton.setVisibility(View.INVISIBLE);
                     twoButton.setVisibility(View.INVISIBLE);
-                    tempTextView.setText("");
                     wingDirection = '2';
 
 
@@ -213,13 +212,11 @@ public class ledControl extends AppCompatActivity {
                     manualButton.setEnabled(false);
                     autoButton.setEnabled(true);
                     oppMode = '1';
-                    manualButton.setBackgroundColor(Color.GRAY);
-                    autoButton.setBackgroundResource(android.R.drawable.btn_default);
+
 //                    deltaTEditText.setVisibility(View.INVISIBLE);
                     zeroButton.setVisibility(View.VISIBLE);
                     oneButton.setVisibility(View.VISIBLE);
                     twoButton.setVisibility(View.VISIBLE);
-                    tempTextView.setText("");
 
 
 

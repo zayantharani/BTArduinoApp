@@ -77,7 +77,7 @@ public class DeviceList extends AppCompatActivity {
         else{
             if ( pairedDevices.size() > 0 ) {
                 for ( BluetoothDevice bt : pairedDevices ) {
-                    if (SettingsActivity.deviceList.equals(bt.getName().toLowerCase()))
+//                    if (SettingsActivity.deviceList.equals(bt.getName().toLowerCase()))
                         list.add(bt.getName().toString() + "\n" + bt.getAddress().toString());
                 }
             } else {
