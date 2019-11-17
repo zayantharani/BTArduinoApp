@@ -9,6 +9,8 @@ import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,7 +34,27 @@ public class DeviceList extends AppCompatActivity {
 
     private BroadcastReceiver blueReceiver;
 
+    // create an action bar button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // R.menu.mymenu is a reference to an xml file named mymenu.xml which should be inside your res/menu directory.
+        // If you don't have res/menu, just create a directory named "menu" inside res
+        getMenuInflater().inflate(R.menu.mymenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    // handle button activities
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.mybutton) {
+            // do something here
+            Intent intent=new Intent(DeviceList.this,SettingsActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,25 +88,23 @@ public class DeviceList extends AppCompatActivity {
 
         pairedDevices = bluetoothAdapter.getBondedDevices();
         ArrayList list = new ArrayList();
+        if(SettingsActivity.deviceList!=null) {
+            if (SettingsActivity.deviceList.size() == 0) {
+                Intent intent = new Intent(DeviceList.this, SettingsActivity.class);
+                startActivity(intent);
 
-        if (SettingsActivity.deviceList.size() == 0){
-            Intent intent = new Intent(DeviceList.this, SettingsActivity.class);
-            startActivity(intent);
-
-            Toast.makeText(this, "Please register a device first", Toast.LENGTH_LONG).show();
-        }
-
-        else{
-            if ( pairedDevices.size() > 0 ) {
-                for ( BluetoothDevice bt : pairedDevices ) {
-//                    if (SettingsActivity.deviceList.equals(bt.getName().toLowerCase()))
-                        list.add(bt.getName().toString() + "\n" + bt.getAddress().toString());
-                }
+                Toast.makeText(this, "Please register a device first", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
+                if (pairedDevices.size() > 0) {
+                    for (BluetoothDevice bt : pairedDevices) {
+                    if (SettingsActivity.deviceList.equals(bt.getName().toLowerCase()))
+                            list.add(bt.getName().toString() + "\n" + bt.getAddress().toString());
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
+                }
             }
         }
-
 
         final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
         visibleDevices.setAdapter(adapter);
