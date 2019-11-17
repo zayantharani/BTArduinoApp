@@ -25,41 +25,64 @@ public class SettingsActivity extends AppCompatActivity {
     EditText etNewDeviceName;
     ImageView btnAddNewDevice;
     RecyclerView rvRegisteredDevices;
-    static ArrayList<Device> deviceList = new ArrayList<>();
+    static ArrayList<Device> deviceList;
     MyListAdapter adapter;
     static int tempUnit = 0;
+    TinyDB tinydb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        tinydb = new TinyDB(SettingsActivity.this);
+
         rgTemperatureUnit = findViewById(R.id.rg_temp_units);
+        tempUnit=tinydb.getInt("TempType");
 
         rgTemperatureUnit.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (i == R.id.rb_celcius)
+                if (i == R.id.rb_celcius) {
                     tempUnit = 0;
-                else
+                }
+                else {
                     tempUnit = 1;
-
+                }
+                tinydb.putInt("TempType",tempUnit);
             }
         });
+        if(tempUnit==0)rgTemperatureUnit.check(R.id.rb_celcius);
+        else rgTemperatureUnit.check(R.id.rb_fahrenheit);
         rbSelectedRadio = findViewById(rgTemperatureUnit.getCheckedRadioButtonId());
+        rbSelectedRadio.setChecked(true);
+//        rb.selec
         //do your operations with "rbSelectedRadio" now
         etNewDeviceName = findViewById(R.id.et_new_device_name);
         btnAddNewDevice = findViewById(R.id.iv_add_new_device);
         rvRegisteredDevices = findViewById(R.id.rv_registered_devices);
+
+        deviceList= new ArrayList<>();
+        ArrayList<String> pairedDevicesList=tinydb.getListString("PairedDevices");
+        for(String device:pairedDevicesList){
+            deviceList.add(new Device(device));
+        }
         adapter = new MyListAdapter(deviceList);
         rvRegisteredDevices.setHasFixedSize(true);
         rvRegisteredDevices.setLayoutManager(new LinearLayoutManager(this));
         rvRegisteredDevices.setAdapter(adapter);
+
         btnAddNewDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //update the list view here
+
                 String devicename = etNewDeviceName.getText().toString().toLowerCase();
                 if(!devicename.isEmpty()) {
                     deviceList.add(new Device(devicename));
+                    ArrayList pairedDevicesList=tinydb.getListString("PairedDevices");
+                    pairedDevicesList.add(devicename);
+                    tinydb.putListString("PairedDevices",pairedDevicesList );
+
                     adapter.notifyChange();
                     etNewDeviceName.setText("");
                     Toast.makeText(SettingsActivity.this, devicename + " Added.", Toast.LENGTH_SHORT).show();
@@ -91,8 +114,12 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(SettingsActivity.this, deviceList.get(position).deviceName + " Deleted.", Toast.LENGTH_SHORT).show();
+                    ArrayList pairedDevicesList=tinydb.getListString("PairedDevices");
+                    pairedDevicesList.remove(deviceList.get(position).deviceName);
+                    tinydb.putListString("PairedDevices",pairedDevicesList );
                     deviceList.remove(position);
                     notifyChange();
+
                 }
             });
         }
