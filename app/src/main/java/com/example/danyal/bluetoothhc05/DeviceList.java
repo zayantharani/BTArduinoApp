@@ -30,7 +30,7 @@ public class DeviceList extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter = null;
     private Set<BluetoothDevice> pairedDevices;
     public static String EXTRA_ADDRESS = "device_address";
-    final BroadcastReceiver mReceiver =new MyBroadcastReceiver();
+//    final BroadcastReceiver mReceiver =new MyBroadcastReceiver();
 
     private BroadcastReceiver blueReceiver;
 

@@ -110,60 +110,52 @@
         app:layout_constraintStart_toEndOf="@+id/tv_currentTemp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
-
     <TextView
         android:id="@+id/tv_ac_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="30"
         android:textSize="50sp"
+        android:text="30"
         app:layout_constraintBottom_toBottomOf="@+id/gauge1"
         app:layout_constraintEnd_toEndOf="@+id/gauge1"
-        app:layout_constraintHorizontal_bias="0.534"
         app:layout_constraintStart_toStartOf="@+id/gauge1"
-        app:layout_constraintTop_toTopOf="@+id/gauge1"
-        app:layout_constraintVertical_bias="0.533" />
-
+        app:layout_constraintTop_toTopOf="@+id/gauge1" />
     <Button
         android:id="@+id/zeroButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="#ECBB10"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="64dp"
         android:text="OFF"
+        android:background="#ECBB10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnDecrease"
-        app:layout_constraintVertical_bias="0.049" />
-
+        app:layout_constraintVertical_bias="0.0" />
     <Button
         android:id="@+id/oneButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="#ECBB10"
+        android:layout_marginTop="64dp"
         android:text="HALF"
-        app:layout_constraintBottom_toTopOf="@+id/sendSignalButton"
+        android:background="#ECBB10"
         app:layout_constraintEnd_toStartOf="@+id/twoButton"
-        app:layout_constraintHorizontal_bias="0.532"
         app:layout_constraintStart_toEndOf="@+id/zeroButton"
-        app:layout_constraintTop_toBottomOf="@+id/gauge1"
-        app:layout_constraintVertical_bias="0.597" />
-
+        app:layout_constraintTop_toBottomOf="@+id/btnDecrease" />
     <Button
         android:id="@+id/twoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:background="#ECBB10"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:text="FULL"
+        android:background="#ECBB10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnIncrease"
-        app:layout_constraintVertical_bias="0.049" />
+        app:layout_constraintTop_toBottomOf="@+id/btnDecrease"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Switch
         android:id="@+id/onOffSwitch"
@@ -177,11 +169,11 @@
 
     <ImageView
         android:id="@+id/bluetoothImageview"
-        android:layout_width="29dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="50dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.894"
+        app:layout_constraintHorizontal_bias="0.741"
         app:layout_constraintStart_toEndOf="@+id/onOffSwitch"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_bluetooth" />
@@ -193,24 +185,8 @@
         android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/settingsImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_auto"
-        app:layout_constraintEnd_toStartOf="@+id/bluetoothImageview"
-        app:layout_constraintHorizontal_bias="0.93"
-        app:layout_constraintStart_toEndOf="@+id/onOffSwitch"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.625"
-        app:srcCompat="@drawable/ic_settings_gears" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/oneButton" />
 
 </android.support.constraint.ConstraintLayout>
 
