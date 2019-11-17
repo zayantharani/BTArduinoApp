@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,16 +27,34 @@ public class SettingsActivity extends AppCompatActivity {
     EditText etNewDeviceName;
     ImageView btnAddNewDevice;
     RecyclerView rvRegisteredDevices;
+    static String deltaT;
     static ArrayList<Device> deviceList;
     MyListAdapter adapter;
     static int tempUnit = 0;
     TinyDB tinydb;
-
+    EditText deltaTEditText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         tinydb = new TinyDB(SettingsActivity.this);
+        deltaTEditText = findViewById(R.id.deltaTEditText);
+        deltaTEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                tinydb.putString("deltaTEditText",charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         rgTemperatureUnit = findViewById(R.id.rg_temp_units);
         tempUnit=tinydb.getInt("TempType");
@@ -89,8 +109,15 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
+
+    @Override
+    public void onBackPressed() {
+        //TODO: Dekh lou yaar isseh bhy
+    }
     public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
         ArrayList<Device> devices;
         MyListAdapter(ArrayList<Device> devices) {

@@ -3,12 +3,9 @@ package com.example.danyal.bluetoothhc05;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,8 +27,8 @@ public class DeviceList extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter = null;
     private Set<BluetoothDevice> pairedDevices;
     public static String EXTRA_ADDRESS = "device_address";
-//    final BroadcastReceiver mReceiver =new MyBroadcastReceiver();
-
+    //    final BroadcastReceiver mReceiver =new MyBroadcastReceiver();
+    TinyDB tinydb;
     private BroadcastReceiver blueReceiver;
 
     // create an action bar button
@@ -50,11 +47,12 @@ public class DeviceList extends AppCompatActivity {
 
         if (id == R.id.mybutton) {
             // do something here
-            Intent intent=new Intent(DeviceList.this,SettingsActivity.class);
+            Intent intent = new Intent(DeviceList.this, SettingsActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +60,7 @@ public class DeviceList extends AppCompatActivity {
 
         btnPaired = (Button) findViewById(R.id.button);
         visibleDevices = (ListView) findViewById(R.id.listView);
-
+        tinydb = new TinyDB(DeviceList.this);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 //        bluetoothAdapter.enable();
         if (bluetoothAdapter != null) {
@@ -84,12 +82,14 @@ public class DeviceList extends AppCompatActivity {
     }
 
 
-    private void pairedDevicesList () {
+    private void pairedDevicesList() {
 
         pairedDevices = bluetoothAdapter.getBondedDevices();
         ArrayList list = new ArrayList();
-        if(SettingsActivity.deviceList!=null) {
-            if (SettingsActivity.deviceList.size() == 0) {
+        ArrayList<String> registeredDevicesList=new ArrayList<String>();
+        registeredDevicesList = tinydb.getListString("PairedDevices");
+        if (registeredDevicesList != null) {
+            if (registeredDevicesList.size() == 0) {
                 Intent intent = new Intent(DeviceList.this, SettingsActivity.class);
                 startActivity(intent);
 
@@ -97,13 +97,16 @@ public class DeviceList extends AppCompatActivity {
             } else {
                 if (pairedDevices.size() > 0) {
                     for (BluetoothDevice bt : pairedDevices) {
-                    if (SettingsActivity.deviceList.equals(bt.getName().toLowerCase()))
+//                        if (registeredDevicesList.contains(bt.getName().toLowerCase()))
                             list.add(bt.getName().toString() + "\n" + bt.getAddress().toString());
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
                 }
             }
+        } else {
+            Intent intent = new Intent(DeviceList.this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
@@ -116,7 +119,7 @@ public class DeviceList extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String info = ((TextView) view).getText().toString();
-            String address = info.substring(info.length()-17);
+            String address = info.substring(info.length() - 17);
 
             Intent i = new Intent(DeviceList.this, ledControl.class);
             i.putExtra(EXTRA_ADDRESS, address);

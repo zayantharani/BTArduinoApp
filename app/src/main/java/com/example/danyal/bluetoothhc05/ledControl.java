@@ -1,5 +1,5 @@
 package com.example.danyal.bluetoothhc05;
-
+//TODO:SetPoint Farhenheight wala chakkar
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -35,18 +35,16 @@ import java.util.UUID;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
 
-//TODO: Change the logic of deltaEditText
 
 public class ledControl extends AppCompatActivity {
 
     Button autoButton, manualButton, zeroButton, oneButton, twoButton, sendSignalButton;
     String address = null;
-    TextView tempTextView;
+    static TextView tempTextView;
     CustomGauge cg1;
     ImageView btnInc, btnDec;
     TextView tv_temp;
     int initial_temp_val = 24;
-//    EditText deltaTEditText;
     TextView setTempTextView;
     ImageView bluetoothImageView, settingsImageView;
     static Context context;
@@ -62,6 +60,8 @@ public class ledControl extends AppCompatActivity {
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     InputStream inputStream;
     OutputStream outputStream;
+    String deltaT;
+    TinyDB tinydb;
     static boolean switchIsChecked;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +69,10 @@ public class ledControl extends AppCompatActivity {
 
         Intent newint = getIntent();
         address = newint.getStringExtra(DeviceList.EXTRA_ADDRESS);
+        tinydb = new TinyDB(ledControl.this);
 
         setContentView(R.layout.activity_led_control);
+        deltaT =tinydb.getString("deltaTEditText");
 
         autoButton = (Button) findViewById(R.id.btn_auto);
         manualButton = (Button) findViewById(R.id.btn_manual);
@@ -191,6 +193,8 @@ public class ledControl extends AppCompatActivity {
                     oppMode = '0';
                     manualButton.setEnabled(true);
                     autoButton.setEnabled(false);
+                    manualButton.setBackgroundColor(Color.parseColor("#ECD866"));
+                    autoButton.setBackgroundColor(Color.parseColor("#ECBB10"));
 
 //                    deltaTEditText.setVisibility(View.VISIBLE);
                     zeroButton.setVisibility(View.INVISIBLE);
@@ -211,6 +215,9 @@ public class ledControl extends AppCompatActivity {
                 if (switchIsChecked){
                     manualButton.setEnabled(false);
                     autoButton.setEnabled(true);
+                    autoButton.setBackgroundColor(Color.parseColor("#ECD866"));
+                    manualButton.setBackgroundColor(Color.parseColor("#ECBB10"));
+
                     oppMode = '1';
 
 //                    deltaTEditText.setVisibility(View.INVISIBLE);
@@ -231,7 +238,13 @@ public class ledControl extends AppCompatActivity {
             @Override
             public void onClick (View v) {
                 if (switchIsChecked)
+                {
+                    oneButton.setBackgroundColor(Color.parseColor("#ECD866"));
+                    twoButton.setBackgroundColor(Color.parseColor("#ECD866"));
+                    zeroButton.setBackgroundColor(Color.parseColor("#ECBB10"));
                     wingDirection = '0';
+
+                }
                 else
                     Toast.makeText(ledControl.this, "Please turn on the device", Toast.LENGTH_SHORT).show();
 
@@ -242,7 +255,13 @@ public class ledControl extends AppCompatActivity {
             @Override
             public void onClick (View v) {
                 if (switchIsChecked)
+                {
+                    zeroButton.setBackgroundColor(Color.parseColor("#ECD866"));
+                    twoButton.setBackgroundColor(Color.parseColor("#ECD866"));
+                    oneButton.setBackgroundColor(Color.parseColor("#ECBB10"));
                     wingDirection = '1';
+
+                }
                 else
                     Toast.makeText(ledControl.this, "Please turn on the device", Toast.LENGTH_SHORT).show();
             }
@@ -253,7 +272,13 @@ public class ledControl extends AppCompatActivity {
             public void onClick (View v) {
 
                 if (switchIsChecked)
-                    wingDirection = '1';
+                {
+                    zeroButton.setBackgroundColor(Color.parseColor("#ECD866"));
+                    oneButton.setBackgroundColor(Color.parseColor("#ECD866"));
+                    twoButton.setBackgroundColor(Color.parseColor("#ECBB10"));
+                    wingDirection = '2';
+
+                }
                 else
                     Toast.makeText(ledControl.this, "Please turn on the device", Toast.LENGTH_SHORT).show();
 
@@ -356,23 +381,23 @@ public class ledControl extends AppCompatActivity {
 
 
 
-//                                        if (setTempTextView.getText().toString().length() > 1 && deltaTEditText.getText().toString().length() >= 1) {
-//
-//                                            int setTemp = Integer.parseInt(setTempTextView.getText().toString());
-//                                            Log.d("Set Temp: ", Integer.toString(setTemp));
-//                                            int deltaTemp = Integer.parseInt(deltaTEditText.getText().toString());
-//                                            Log.d("delta Temp: ", Integer.toString(deltaTemp));
-//
-//                                            if ((roomTemp - setTemp) > deltaTemp)
-//                                                wingDirection = '2';
-//
-//                                            else if ((roomTemp - setTemp) == 0)
-//                                                wingDirection = '0';
-//
-//                                            else if ((roomTemp - setTemp) <= deltaTemp)
-//                                                wingDirection = '1';
-//
-//                                        }
+                                        if (setTempTextView.getText().toString().length() > 1 && deltaT.length() >= 1) {
+
+                                            int setTemp = Integer.parseInt(setTempTextView.getText().toString());
+                                            Log.d("Set Temp: ", Integer.toString(setTemp));
+                                            int deltaTemp = Integer.parseInt(deltaT);
+                                            Log.d("delta Temp: ", Integer.toString(deltaTemp));
+
+                                            if ((roomTemp - setTemp) > deltaTemp)
+                                                wingDirection = '2';
+
+                                            else if ((roomTemp - setTemp) == 0)
+                                                wingDirection = '0';
+
+                                            else if ((roomTemp - setTemp) <= deltaTemp)
+                                                wingDirection = '1';
+
+                                        }
                                     }
                                 }
                                 catch (Exception e){
