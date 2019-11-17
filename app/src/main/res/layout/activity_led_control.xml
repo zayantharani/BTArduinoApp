@@ -7,14 +7,13 @@
     tools:context=".ledControl">
 
 
-
     <pl.pawelkleczkowski.customgauge.CustomGauge
         android:id="@+id/gauge1"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="95dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="95dp"
         android:layout_marginBottom="236dp"
         android:paddingLeft="20dp"
@@ -32,25 +31,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.047"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.358" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_currentTemp" />
+
     <TextView
         android:id="@+id/tv_currentTemp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="197dp"
-        android:layout_marginLeft="197dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="198dp"
-        android:layout_marginRight="198dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="8dp"
         android:text="20"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/gauge1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.428"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintEnd_toStartOf="@+id/btn_auto"
+        app:layout_constraintStart_toEndOf="@+id/btn_manual"
+        app:layout_constraintTop_toBottomOf="@+id/onOffSwitch" />
     <ImageView
         android:id="@+id/btnIncrease"
         android:layout_width="70dp"
@@ -80,36 +74,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gauge1"
         app:layout_constraintVertical_bias="0.167" />
+
     <Button
         android:id="@+id/btn_manual"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
-        android:layout_marginLeft="60dp"
         android:layout_marginTop="80dp"
         android:background="#ECBB10"
         android:text="Manual"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/gauge1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/btn_auto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
         android:layout_marginEnd="60dp"
-        android:layout_marginRight="60dp"
         android:background="#ECD866"
         android:text="Auto"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/gauge1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/tv_currentTemp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:id="@+id/tv_ac_temp"
         android:layout_width="wrap_content"
