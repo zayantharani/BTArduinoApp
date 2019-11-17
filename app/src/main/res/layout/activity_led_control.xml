@@ -29,7 +29,7 @@
         app:gaugeSweepAngle="270"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.047"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_currentTemp" />
 
@@ -45,25 +45,25 @@
         app:layout_constraintEnd_toStartOf="@+id/btn_auto"
         app:layout_constraintStart_toEndOf="@+id/btn_manual"
         app:layout_constraintTop_toBottomOf="@+id/onOffSwitch" />
+
     <ImageView
         android:id="@+id/btnIncrease"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginEnd="112dp"
-        android:layout_marginRight="112dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="Increase Temperature"
         android:src="@drawable/playbutton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gauge1"
-        app:layout_constraintVertical_bias="0.167" />
+        app:layout_constraintVertical_bias="0.16000003" />
+
     <ImageView
         android:id="@+id/btnDecrease"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="96dp"
-        android:layout_marginLeft="96dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="Decrease Temperature"
         android:rotation="180"
@@ -73,7 +73,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gauge1"
-        app:layout_constraintVertical_bias="0.167" />
+        app:layout_constraintVertical_bias="0.18" />
 
     <Button
         android:id="@+id/btn_manual"
@@ -108,42 +108,43 @@
         app:layout_constraintEnd_toEndOf="@+id/gauge1"
         app:layout_constraintStart_toStartOf="@+id/gauge1"
         app:layout_constraintTop_toTopOf="@+id/gauge1" />
+
     <Button
         android:id="@+id/zeroButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="64dp"
-        android:text="OFF"
         android:background="#ECBB10"
+        android:text="OFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnDecrease"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.028" />
+
     <Button
         android:id="@+id/oneButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="HALF"
+        android:layout_marginTop="56dp"
         android:background="#ECBB10"
+        android:text="HALF"
         app:layout_constraintEnd_toStartOf="@+id/twoButton"
+        app:layout_constraintHorizontal_bias="0.467"
         app:layout_constraintStart_toEndOf="@+id/zeroButton"
         app:layout_constraintTop_toBottomOf="@+id/btnDecrease" />
+
     <Button
         android:id="@+id/twoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:text="FULL"
         android:background="#ECBB10"
+        android:text="FULL"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnDecrease"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.028" />
 
     <Switch
         android:id="@+id/onOffSwitch"
@@ -171,10 +172,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="104dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/twoButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/oneButton" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/gauge1"
+        app:layout_constraintTop_toBottomOf="@+id/btn_auto"
+        app:layout_constraintVertical_bias="0.16000003" />
 
 </android.support.constraint.ConstraintLayout>
 
