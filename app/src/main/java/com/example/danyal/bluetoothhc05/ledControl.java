@@ -10,10 +10,13 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -66,12 +69,18 @@ public class ledControl extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ConstraintLayout ledControlActivity = findViewById(R.id.ledControlActivity);
+
+//        ledControlActivity.setBackgroundColor(getResources().getColor(R.color.backgroundColour));;
 
         Intent newint = getIntent();
         address = newint.getStringExtra(DeviceList.EXTRA_ADDRESS);
         tinydb = new TinyDB(ledControl.this);
 
         setContentView(R.layout.activity_led_control);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getSupportActionBar().hide();
         deltaT =tinydb.getString("deltaTEditText");
 
         autoButton = (Button) findViewById(R.id.btn_auto);
@@ -100,7 +109,14 @@ public class ledControl extends AppCompatActivity {
         cg1.setPointStartColor(Color.parseColor("#00FF2B"));
         cg1.setPointEndColor(Color.parseColor("#FF0000"));
         cg1.setPointSize((initial_temp_val-15) * 18);
-        setTempTextView.setText(initial_temp_val + "");
+        if (tinydb.getInt("TempType") == 1) {
+
+//            initial_temp_val = (initial_temp_val * 9 / 5) + 32;
+            setTempTextView.setText(initial_temp_val + "°F");
+        }
+        else{
+            setTempTextView.setText(initial_temp_val + "°C");
+        }
 
         cg1.setVisibility(View.INVISIBLE);
         cg1.setVisibility(View.VISIBLE);
@@ -112,10 +128,17 @@ public class ledControl extends AppCompatActivity {
         btnInc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().trim());
+                int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0,2).trim());
                 c_temp_val++;
                 if(c_temp_val<=30){
-                    setTempTextView.setText(c_temp_val+"");
+                    if (tinydb.getInt("TempType") == 1) {
+
+//            initial_temp_val = (initial_temp_val * 9 / 5) + 32;
+                        setTempTextView.setText(c_temp_val + "°F");
+                    }
+                    else{
+                        setTempTextView.setText(c_temp_val + "°C");
+                    }
                     int x = cg1.getPointSize() + 18;
                     cg1.setPointSize(x);
                     cg1.setPointStartColor(Color.parseColor("#00FF2B"));
@@ -128,10 +151,17 @@ public class ledControl extends AppCompatActivity {
         btnDec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().trim());
+                int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0,2).trim());
                 c_temp_val--;
                 if(c_temp_val>=15) {
-                    setTempTextView.setText(c_temp_val +"");
+                    if (tinydb.getInt("TempType") == 1) {
+
+//            initial_temp_val = (initial_temp_val * 9 / 5) + 32;
+                        setTempTextView.setText(c_temp_val + "°F");
+                    }
+                    else{
+                        setTempTextView.setText(c_temp_val + "°C");
+                    }
                     int x = cg1.getPointSize() - 18;
                     cg1.setPointSize(x);
                     cg1.setPointStartColor(Color.parseColor("#00FF2B"));
@@ -193,9 +223,8 @@ public class ledControl extends AppCompatActivity {
                     oppMode = '0';
                     manualButton.setEnabled(true);
                     autoButton.setEnabled(false);
-                    manualButton.setBackgroundColor(Color.parseColor("#ECD866"));
-                    autoButton.setBackgroundColor(Color.parseColor("#ECBB10"));
-
+                    manualButton.setBackgroundColor(manualButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+                    autoButton.setBackgroundColor(autoButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
 //                    deltaTEditText.setVisibility(View.VISIBLE);
                     zeroButton.setVisibility(View.INVISIBLE);
                     oneButton.setVisibility(View.INVISIBLE);
@@ -215,8 +244,8 @@ public class ledControl extends AppCompatActivity {
                 if (switchIsChecked){
                     manualButton.setEnabled(false);
                     autoButton.setEnabled(true);
-                    autoButton.setBackgroundColor(Color.parseColor("#ECD866"));
-                    manualButton.setBackgroundColor(Color.parseColor("#ECBB10"));
+                    autoButton.setBackgroundColor(autoButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+                    manualButton.setBackgroundColor(manualButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
 
                     oppMode = '1';
 
@@ -239,9 +268,9 @@ public class ledControl extends AppCompatActivity {
             public void onClick (View v) {
                 if (switchIsChecked)
                 {
-                    oneButton.setBackgroundColor(Color.parseColor("#ECD866"));
-                    twoButton.setBackgroundColor(Color.parseColor("#ECD866"));
-                    zeroButton.setBackgroundColor(Color.parseColor("#ECBB10"));
+                    oneButton.setBackgroundColor(oneButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+                    twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+                    zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
                     wingDirection = '0';
 
                 }
@@ -256,9 +285,9 @@ public class ledControl extends AppCompatActivity {
             public void onClick (View v) {
                 if (switchIsChecked)
                 {
-                    zeroButton.setBackgroundColor(Color.parseColor("#ECD866"));
-                    twoButton.setBackgroundColor(Color.parseColor("#ECD866"));
-                    oneButton.setBackgroundColor(Color.parseColor("#ECBB10"));
+                    zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+                    twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+                    oneButton.setBackgroundColor(oneButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
                     wingDirection = '1';
 
                 }
@@ -273,9 +302,9 @@ public class ledControl extends AppCompatActivity {
 
                 if (switchIsChecked)
                 {
-                    zeroButton.setBackgroundColor(Color.parseColor("#ECD866"));
-                    oneButton.setBackgroundColor(Color.parseColor("#ECD866"));
-                    twoButton.setBackgroundColor(Color.parseColor("#ECBB10"));
+                    zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+                    oneButton.setBackgroundColor(oneButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+                    twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
                     wingDirection = '2';
 
                 }
@@ -299,6 +328,7 @@ public class ledControl extends AppCompatActivity {
 
 
                         sendSignalButton.setEnabled(false);
+                        sendSignalButton.setBackgroundColor(sendSignalButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
 
                         Timer buttonTimer = new Timer();
                         buttonTimer.schedule(new TimerTask() {
@@ -310,6 +340,7 @@ public class ledControl extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         sendSignalButton.setEnabled(true);
+                                        sendSignalButton.setBackgroundColor(sendSignalButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
                                     }
                                 });
                             }
@@ -372,7 +403,7 @@ public class ledControl extends AppCompatActivity {
                                 try{
                                     roomTemp = Integer.parseInt(rtp);
 
-                                    if (SettingsActivity.tempUnit == 1)
+                                    if (tinydb.getInt("TempType") == 1)
                                         roomTemp = (roomTemp * 9/5) + 32;
 
                                     Log.d("RTP: ", Integer.toString(roomTemp));
@@ -407,7 +438,7 @@ public class ledControl extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        if (SettingsActivity.tempUnit == 0)
+                                        if (tinydb.getInt("TempType") == 0)
                                             tempTextView.setText(roomTemp + "°C");
                                         else
                                             tempTextView.setText(roomTemp + "°F");

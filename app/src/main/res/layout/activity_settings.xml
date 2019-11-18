@@ -7,7 +7,9 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SettingActivity">
+        tools:context=".SettingActivity"
+        android:id="@+id/settingsActivity"
+        android:background="@color/backgroundColour">
 
         <EditText
             android:id="@+id/tv_temp_unit_no_edit"
@@ -23,6 +25,7 @@
             android:focusableInTouchMode="false"
             android:inputType="textPersonName"
             android:text="Unit of Temperature"
+            android:textColor="@color/textColour"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +40,8 @@
             android:layout_marginEnd="10dp"
             android:clickable="false"
             android:cursorVisible="false"
+            android:textColor="@color/textColour"
+
             android:ems="10"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -64,11 +69,15 @@
             <RadioButton
                 android:id="@+id/rb_fahrenheit"
                 android:layout_width="174dp"
+                android:textColor="@color/textColour"
+                android:buttonTint="@color/textColour"
                 android:layout_height="wrap_content"
                 android:text="Fahrenheit" />
             <RadioButton
                 android:id="@+id/rb_celcius"
                 android:layout_width="212dp"
+                android:textColor="@color/textColour"
+                android:buttonTint="@color/textColour"
                 android:layout_height="wrap_content"
                 android:text="Celcius" />
         </RadioGroup>
@@ -82,6 +91,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:clickable="false"
+            android:textColor="@color/textColour"
             android:cursorVisible="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -98,10 +108,12 @@
             android:layout_height="55dp"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
+            android:textColor="@color/textColour"
             android:layout_marginTop="16dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:hint="Device name here.."
+            android:textColorHint="@color/textColour"
             android:textSize="17sp"
             android:background="@android:color/transparent"
             app:layout_constraintEnd_toStartOf="@+id/iv_add_new_device"
@@ -128,6 +140,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:clickable="false"
+            android:textColor="@color/textColour"
             android:cursorVisible="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -161,9 +174,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter half temperature"
+            android:textColor="@color/textColour"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:textColorHint="@color/textColour"
             android:ems="10"
             android:inputType="number"
             app:layout_constraintEnd_toEndOf="parent"

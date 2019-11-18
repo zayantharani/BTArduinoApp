@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ledControl">
+    tools:context=".ledControl"
+    android:id="@+id/ledControlActivity"
+    android:background="@color/backgroundColour">
 
 
     <pl.pawelkleczkowski.customgauge.CustomGauge
@@ -38,50 +40,52 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="8dp"
-        android:text="20"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/btn_auto"
-        app:layout_constraintStart_toEndOf="@+id/btn_manual"
-        app:layout_constraintTop_toBottomOf="@+id/onOffSwitch" />
+        android:text="20°C"
+        android:textColor="@color/textColour"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.441"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/btn_auto" />
 
     <ImageView
         android:id="@+id/btnIncrease"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginEnd="112dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="104dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="Increase Temperature"
-        android:src="@drawable/playbutton"
+        android:src="@drawable/ic_plus"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gauge1"
-        app:layout_constraintVertical_bias="0.16000003" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/btnDecrease"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="96dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="Decrease Temperature"
         android:rotation="180"
-        android:src="@drawable/playbutton"
+        android:src="@drawable/ic_minus"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnIncrease"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.14"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gauge1"
-        app:layout_constraintVertical_bias="0.18" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/btn_manual"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="80dp"
-        android:background="#ECBB10"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="92dp"
+        android:background="@color/buttonColourEnabled"
         android:text="Manual"
         android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,19 +95,21 @@
         android:id="@+id/btn_auto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="60dp"
-        android:background="#ECD866"
+        android:layout_marginTop="92dp"
+        android:layout_marginEnd="96dp"
+        android:background="@color/buttonColourDisabled"
         android:text="Auto"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tv_ac_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="30°C"
+        android:textColor="@color/textColour"
         android:textSize="50sp"
-        android:text="30"
         app:layout_constraintBottom_toBottomOf="@+id/gauge1"
         app:layout_constraintEnd_toEndOf="@+id/gauge1"
         app:layout_constraintStart_toStartOf="@+id/gauge1"
@@ -113,45 +119,55 @@
         android:id="@+id/zeroButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="64dp"
-        android:background="#ECBB10"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="108dp"
+        android:background="@color/buttonColourEnabled"
         android:text="OFF"
+        android:textColor="@color/textColour"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnDecrease"
-        app:layout_constraintVertical_bias="0.028" />
+        app:layout_constraintEnd_toStartOf="@+id/btnDecrease"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/oneButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:background="#ECBB10"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="44dp"
+        android:background="@color/buttonColourDisabled"
         android:text="HALF"
-        app:layout_constraintEnd_toStartOf="@+id/twoButton"
-        app:layout_constraintHorizontal_bias="0.467"
-        app:layout_constraintStart_toEndOf="@+id/zeroButton"
-        app:layout_constraintTop_toBottomOf="@+id/btnDecrease" />
+        android:textColor="@color/textColour"
+        app:layout_constraintBottom_toTopOf="@+id/sendSignalButton"
+        app:layout_constraintEnd_toStartOf="@+id/btnIncrease"
+        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintStart_toEndOf="@+id/btnDecrease"
+        app:layout_constraintTop_toBottomOf="@+id/gauge1"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/twoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="36dp"
-        android:background="#ECBB10"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="108dp"
+        android:background="@color/buttonColourDisabled"
         android:text="FULL"
+        android:textColor="@color/textColour"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnDecrease"
-        app:layout_constraintVertical_bias="0.034" />
+        app:layout_constraintStart_toEndOf="@+id/btnIncrease" />
 
     <Switch
         android:id="@+id/onOffSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:textColor="@color/textColour"
+        android:text="Off"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -159,8 +175,8 @@
 
     <ImageView
         android:id="@+id/bluetoothImageview"
-        android:layout_width="50dp"
-        android:layout_height="45dp"
+        android:layout_width="28dp"
+        android:layout_height="38dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.741"
@@ -171,19 +187,18 @@
     <Button
         android:id="@+id/sendSignalButton"
         android:layout_width="wrap_content"
-        android:text="Send"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="104dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/twoButton"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/buttonColourEnabled"
+        android:text="Send"
+        android:textColor="@color/textColour"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/gauge1"
-        app:layout_constraintTop_toBottomOf="@+id/btn_auto"
-        app:layout_constraintVertical_bias="0.16000003" />
+        app:layout_constraintHorizontal_bias="0.524"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/settingsImageView"
@@ -197,198 +212,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_settings_gears" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="28dp"
+        android:text="RTP :"
+        android:textColor="@color/textColour"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_manual" />
+
 </android.support.constraint.ConstraintLayout>
 
 
 
 
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--tools:context="com.example.danyal.bluetoothhc05.ledControl">-->
-
-
-    <!--<Button-->
-        <!--android:id="@+id/manualButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="56dp"-->
-        <!--android:layout_marginLeft="56dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:text="Manual"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/tempTextView"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:layout_constraintVertical_bias="0.653" />-->
-
-    <!--<Button-->
-        <!--android:id="@+id/autoButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginLeft="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:text="Automatic"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/tempTextView"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintHorizontal_bias="0.563"-->
-        <!--app:layout_constraintStart_toEndOf="@+id/manualButton"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:layout_constraintVertical_bias="0.653" />-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/tempTextView"-->
-        <!--android:layout_width="183dp"-->
-        <!--android:layout_height="74dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:fontFamily="sans-serif-condensed-medium"-->
-        <!--android:gravity="center"-->
-        <!--android:text="-"-->
-        <!--android:textSize="50dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:layout_constraintVertical_bias="0.348" />-->
-
-    <!--<EditText-->
-        <!--android:id="@+id/deltaTEditText"-->
-        <!--android:layout_width="147dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:gravity="center"-->
-        <!--android:hint="Choose delta T"-->
-        <!--android:inputType="numberDecimal"-->
-        <!--android:visibility="invisible"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/tempTextView"-->
-        <!--app:layout_constraintVertical_bias="0.377" />-->
-
-    <!--<Button-->
-        <!--android:id="@+id/zeroButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginLeft="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:text="0 Degree"-->
-        <!--android:visibility="invisible"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toStartOf="@+id/oneButton"-->
-        <!--app:layout_constraintHorizontal_bias="0.448"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/deltaTEditText"-->
-        <!--app:layout_constraintVertical_bias="0.285" />-->
-
-    <!--<Button-->
-        <!--android:id="@+id/oneButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="36dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:text="45 Degree"-->
-        <!--android:visibility="invisible"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/sendSignalButton"-->
-        <!--app:layout_constraintEnd_toStartOf="@+id/twoButton"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/deltaTEditText" />-->
-
-    <!--<Button-->
-        <!--android:id="@+id/twoButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="28dp"-->
-        <!--android:layout_marginRight="28dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:text="90 Degree"-->
-        <!--android:visibility="invisible"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/deltaTEditText"-->
-        <!--app:layout_constraintVertical_bias="0.285" />-->
-
-    <!--<Switch-->
-        <!--android:id="@+id/onOffSwitch"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginLeft="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:text="Off"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/tempTextView"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintHorizontal_bias="0.498"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:layout_constraintVertical_bias="0.259" />-->
-
-    <!--<ImageView-->
-        <!--android:id="@+id/bluetoothImageView"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginLeft="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintHorizontal_bias="0.9"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:layout_constraintVertical_bias="0.03"-->
-        <!--app:srcCompat="@drawable/ic_bluetooth" />-->
-
-    <!--<EditText-->
-        <!--android:id="@+id/setTempEditText"-->
-        <!--android:layout_width="157dp"-->
-        <!--android:layout_height="51dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:gravity="center"-->
-        <!--android:hint="Set Temperature"-->
-        <!--android:inputType="number"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/deltaTEditText"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/tempTextView"-->
-        <!--app:layout_constraintVertical_bias="1.0" />-->
-
-    <!--<Button-->
-        <!--android:id="@+id/sendSignalButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:text="Send Signal"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent" />-->
-
-<!--</android.support.constraint.ConstraintLayout>-->
