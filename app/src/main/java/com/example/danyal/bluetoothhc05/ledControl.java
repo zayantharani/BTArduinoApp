@@ -87,7 +87,7 @@ public class ledControl extends AppCompatActivity {
 
         currentTempType = tinydb.getInt("TempType");
         if(currentTempType == 0){
-            initial_temp_val = 24;
+            initial_temp_val = 50;
         }else if(currentTempType == 1){
             initial_temp_val = 65;
         }
@@ -114,7 +114,7 @@ public class ledControl extends AppCompatActivity {
         onOffSwitch = (Switch) findViewById(R.id.onOffSwitch);
         setTempTextView =  findViewById(R.id.tv_ac_temp); //Sending
 
-        //new ConnectBT().execute();
+        new ConnectBT().execute();
 
 
         cg1.setPointSize(0);
@@ -128,7 +128,7 @@ public class ledControl extends AppCompatActivity {
         if(currentTempType == 0) {// Celcius
 
 
-            cg1.setPointSize((initial_temp_val - 15) * 18);
+            cg1.setPointSize((int)(initial_temp_val * 3.857));
             if (tinydb.getInt("TempType") == 1) {
 
 //            initial_temp_val = (initial_temp_val * 9 / 5) + 32;
@@ -147,13 +147,15 @@ public class ledControl extends AppCompatActivity {
             btnInc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, 2).trim());
+                    int index = setTempTextView.getText().toString().indexOf("°");
+                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
                     c_temp_val++;
                     if (c_temp_val <= 70) {
 
                         setTempTextView.setText(c_temp_val + "°C");
 
-                        int x = cg1.getPointSize() + 18;
+                        int x = (int)Math.ceil(cg1.getPointSize() + 3.857);
+                        if(x>270)x=270;
                         cg1.setPointSize(x);
                         cg1.setPointStartColor(Color.parseColor("#00FF2B"));
                         cg1.setPointEndColor(Color.parseColor("#FF0000"));
@@ -165,12 +167,16 @@ public class ledControl extends AppCompatActivity {
             btnDec.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, 2).trim());
+                    int index = setTempTextView.getText().toString().indexOf("°");
+                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
                     c_temp_val--;
+
                     if (c_temp_val >= 0) {
 
                         setTempTextView.setText(c_temp_val + "°C");
-                        int x = cg1.getPointSize() - 18;
+                        int x = (int)Math.floor(cg1.getPointSize() - 3.857);
+                        if(x<0)x=0;
+
                         cg1.setPointSize(x);
                         cg1.setPointStartColor(Color.parseColor("#00FF2B"));
                         cg1.setPointEndColor(Color.parseColor("#FF0000"));
@@ -182,7 +188,7 @@ public class ledControl extends AppCompatActivity {
             });
         }
         else if(currentTempType == 1){
-            cg1.setPointSize((initial_temp_val - 59) * 10);
+            cg1.setPointSize((int)((initial_temp_val - 32) * 2.1428));
             if (tinydb.getInt("TempType") == 1) {
 
 //            initial_temp_val = (initial_temp_val * 9 / 5) + 32;
@@ -201,13 +207,15 @@ public class ledControl extends AppCompatActivity {
             btnInc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, 2).trim());
+                    int index = setTempTextView.getText().toString().indexOf("°");
+                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
                     c_temp_val++;
-                    if (c_temp_val <= 86) {
+                    if (c_temp_val <= 158) {
 
                         setTempTextView.setText(c_temp_val + "°F");
 
-                        int x = cg1.getPointSize() + 10;
+                        int x = (int)Math.ceil(cg1.getPointSize() + 2.1428);
+                        if(x>270)x=270;
                         cg1.setPointSize(x);
                         cg1.setPointStartColor(Color.parseColor("#00FF2B"));
                         cg1.setPointEndColor(Color.parseColor("#FF0000"));
@@ -219,12 +227,15 @@ public class ledControl extends AppCompatActivity {
             btnDec.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, 2).trim());
+                    int index = setTempTextView.getText().toString().indexOf("°");
+                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
                     c_temp_val--;
-                    if (c_temp_val >= 59) {
+
+                    if (c_temp_val >= 32) {
 
                         setTempTextView.setText(c_temp_val + "°F");
-                        int x = cg1.getPointSize() - 10;
+                        int x = (int)Math.floor(cg1.getPointSize() - 2.1428);
+                        if(x<0)x=0;
                         cg1.setPointSize(x);
                         cg1.setPointStartColor(Color.parseColor("#00FF2B"));
                         cg1.setPointEndColor(Color.parseColor("#FF0000"));
