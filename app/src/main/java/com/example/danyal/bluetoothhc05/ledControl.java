@@ -47,7 +47,7 @@ public class ledControl extends AppCompatActivity {
     CustomGauge cg1;
     ImageView btnInc, btnDec;
     TextView tv_temp;
-    int initial_temp_val = 24;
+    int initial_temp_val;
     TextView setTempTextView;
     ImageView bluetoothImageView, settingsImageView;
     static Context context;
@@ -66,6 +66,14 @@ public class ledControl extends AppCompatActivity {
     String deltaT;
     TinyDB tinydb;
     static boolean switchIsChecked;
+
+    int currentTempType =0;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +85,12 @@ public class ledControl extends AppCompatActivity {
         address = newint.getStringExtra(DeviceList.EXTRA_ADDRESS);
         tinydb = new TinyDB(ledControl.this);
 
+        currentTempType = tinydb.getInt("TempType");
+        if(currentTempType == 0){
+            initial_temp_val = 24;
+        }else if(currentTempType == 1){
+            initial_temp_val = 65;
+        }
         setContentView(R.layout.activity_led_control);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -100,7 +114,7 @@ public class ledControl extends AppCompatActivity {
         onOffSwitch = (Switch) findViewById(R.id.onOffSwitch);
         setTempTextView =  findViewById(R.id.tv_ac_temp); //Sending
 
-        new ConnectBT().execute();
+        //new ConnectBT().execute();
 
 
         cg1.setPointSize(0);
@@ -108,71 +122,121 @@ public class ledControl extends AppCompatActivity {
 
         cg1.setPointStartColor(Color.parseColor("#00FF2B"));
         cg1.setPointEndColor(Color.parseColor("#FF0000"));
-        cg1.setPointSize((initial_temp_val-15) * 18);
-        if (tinydb.getInt("TempType") == 1) {
+
+
+
+        if(currentTempType == 0) {// Celcius
+
+
+            cg1.setPointSize((initial_temp_val - 15) * 18);
+            if (tinydb.getInt("TempType") == 1) {
 
 //            initial_temp_val = (initial_temp_val * 9 / 5) + 32;
-            setTempTextView.setText(initial_temp_val + "°F");
-        }
-        else{
-            setTempTextView.setText(initial_temp_val + "°C");
-        }
-
-        cg1.setVisibility(View.INVISIBLE);
-        cg1.setVisibility(View.VISIBLE);
-
-
-        btnInc.setClickable(true);
-        btnDec.setClickable(true);
-
-        btnInc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0,2).trim());
-                c_temp_val++;
-                if(c_temp_val<=30){
-                    if (tinydb.getInt("TempType") == 1) {
-
-//            initial_temp_val = (initial_temp_val * 9 / 5) + 32;
-                        setTempTextView.setText(c_temp_val + "°F");
-                    }
-                    else{
-                        setTempTextView.setText(c_temp_val + "°C");
-                    }
-                    int x = cg1.getPointSize() + 18;
-                    cg1.setPointSize(x);
-                    cg1.setPointStartColor(Color.parseColor("#00FF2B"));
-                    cg1.setPointEndColor(Color.parseColor("#FF0000"));
-                    cg1.setVisibility(View.INVISIBLE);
-                    cg1.setVisibility(View.VISIBLE);
-                }
+                setTempTextView.setText(initial_temp_val + "°F");
+            } else {
+                setTempTextView.setText(initial_temp_val + "°C");
             }
-        });
-        btnDec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0,2).trim());
-                c_temp_val--;
-                if(c_temp_val>=15) {
-                    if (tinydb.getInt("TempType") == 1) {
+
+            cg1.setVisibility(View.INVISIBLE);
+            cg1.setVisibility(View.VISIBLE);
+
+
+            btnInc.setClickable(true);
+            btnDec.setClickable(true);
+
+            btnInc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, 2).trim());
+                    c_temp_val++;
+                    if (c_temp_val <= 70) {
+
+                        setTempTextView.setText(c_temp_val + "°C");
+
+                        int x = cg1.getPointSize() + 18;
+                        cg1.setPointSize(x);
+                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
+                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
+                        cg1.setVisibility(View.INVISIBLE);
+                        cg1.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+            btnDec.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, 2).trim());
+                    c_temp_val--;
+                    if (c_temp_val >= 0) {
+
+                        setTempTextView.setText(c_temp_val + "°C");
+                        int x = cg1.getPointSize() - 18;
+                        cg1.setPointSize(x);
+                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
+                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
+
+                        cg1.setVisibility(View.INVISIBLE);
+                        cg1.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
+        else if(currentTempType == 1){
+            cg1.setPointSize((initial_temp_val - 59) * 10);
+            if (tinydb.getInt("TempType") == 1) {
 
 //            initial_temp_val = (initial_temp_val * 9 / 5) + 32;
-                        setTempTextView.setText(c_temp_val + "°F");
-                    }
-                    else{
-                        setTempTextView.setText(c_temp_val + "°C");
-                    }
-                    int x = cg1.getPointSize() - 18;
-                    cg1.setPointSize(x);
-                    cg1.setPointStartColor(Color.parseColor("#00FF2B"));
-                    cg1.setPointEndColor(Color.parseColor("#FF0000"));
-
-                    cg1.setVisibility(View.INVISIBLE);
-                    cg1.setVisibility(View.VISIBLE);
-                }
+                setTempTextView.setText(initial_temp_val + "°F");
+            } else {
+                setTempTextView.setText(initial_temp_val + "°C");
             }
-        });
 
+            cg1.setVisibility(View.INVISIBLE);
+            cg1.setVisibility(View.VISIBLE);
+
+
+            btnInc.setClickable(true);
+            btnDec.setClickable(true);
+
+            btnInc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, 2).trim());
+                    c_temp_val++;
+                    if (c_temp_val <= 86) {
+
+                        setTempTextView.setText(c_temp_val + "°F");
+
+                        int x = cg1.getPointSize() + 10;
+                        cg1.setPointSize(x);
+                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
+                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
+                        cg1.setVisibility(View.INVISIBLE);
+                        cg1.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+            btnDec.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, 2).trim());
+                    c_temp_val--;
+                    if (c_temp_val >= 59) {
+
+                        setTempTextView.setText(c_temp_val + "°F");
+                        int x = cg1.getPointSize() - 10;
+                        cg1.setPointSize(x);
+                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
+                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
+
+                        cg1.setVisibility(View.INVISIBLE);
+                        cg1.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
+
+        //////////////////////////////////////////
         settingsImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

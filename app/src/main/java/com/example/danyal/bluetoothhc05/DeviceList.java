@@ -60,6 +60,7 @@ public class DeviceList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_list);
 
+        //startActivity(new Intent(this, ledControl.class));
         btnPaired = (Button) findViewById(R.id.button);
         visibleDevices = (ListView) findViewById(R.id.listView);
         tinydb = new TinyDB(DeviceList.this);
