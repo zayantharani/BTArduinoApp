@@ -4,8 +4,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -96,8 +98,13 @@ public class DeviceList extends AppCompatActivity {
                 Toast.makeText(this, "Please register a device first", Toast.LENGTH_LONG).show();
             } else {
                 if (pairedDevices.size() > 0) {
+                    int i=0;
                     for (BluetoothDevice bt : pairedDevices) {
-//                        if (registeredDevicesList.contains(bt.getName().toLowerCase()))
+                        Log.i("sjbhjshjscsjhshjc","BT Name: " + bt.getName());
+                        if(i<registeredDevicesList.size()) {
+                            Log.i("sjbhjshjscsjhshjc", "Device Name: " + registeredDevicesList.get(i++));
+                        }
+                        if (registeredDevicesList.contains(bt.getName().toLowerCase()))
                             list.add(bt.getName().toString() + "\n" + bt.getAddress().toString());
                     }
                 } else {
@@ -109,7 +116,7 @@ public class DeviceList extends AppCompatActivity {
             startActivity(intent);
         }
 
-        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
+        final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.visible_devices_row, R.id.tv_visible_device_name, list);
         visibleDevices.setAdapter(adapter);
         visibleDevices.setOnItemClickListener(myListClickListener);
     }
@@ -118,7 +125,8 @@ public class DeviceList extends AppCompatActivity {
     private AdapterView.OnItemClickListener myListClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String info = ((TextView) view).getText().toString();
+
+            String info = ((TextView) view.findViewById(R.id.tv_visible_device_name)).getText().toString();
             String address = info.substring(info.length() - 17);
 
             Intent i = new Intent(DeviceList.this, ledControl.class);

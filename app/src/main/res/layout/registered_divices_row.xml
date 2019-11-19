@@ -15,6 +15,7 @@
         android:layout_marginLeft="10dp"
         android:text="TextView"
         android:textSize="18sp"
+        android:textColor="#ffffff"
         app:layout_constraintEnd_toStartOf="@+id/iv_delete_device"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -29,6 +30,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/delete" />
     <View
+        android:backgroundTint="#ffffff"
         android:id="@+id/divider"
         android:layout_width="409dp"
         android:layout_height="1dp"

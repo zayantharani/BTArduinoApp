@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundColour"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".SettingActivity"
-        android:id="@+id/settingsActivity"
-        android:background="@color/backgroundColour">
-
+        android:id="@+id/settingsActivity">
         <EditText
             android:id="@+id/tv_temp_unit_no_edit"
             android:layout_width="0dp"
@@ -113,7 +113,7 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:hint="Device name here.."
-            android:textColorHint="@color/textColour"
+            android:textColorHint="#90E9D9D9"
             android:textSize="17sp"
             android:background="@android:color/transparent"
             app:layout_constraintEnd_toStartOf="@+id/iv_add_new_device"
@@ -178,7 +178,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:textColorHint="@color/textColour"
+            android:textColorHint="#90E9D9D9"
             android:ems="10"
             android:inputType="number"
             app:layout_constraintEnd_toEndOf="parent"
