@@ -52,8 +52,8 @@
 
     <ImageView
         android:id="@+id/btnIncrease"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="104dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="Increase Temperature"
@@ -65,8 +65,8 @@
 
     <ImageView
         android:id="@+id/btnDecrease"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="96dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="Decrease Temperature"
@@ -134,18 +134,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="44dp"
         android:background="@color/buttonColourDisabled"
         android:text="HALF"
         android:textColor="@color/textColour"
         app:layout_constraintBottom_toTopOf="@+id/sendSignalButton"
-        app:layout_constraintEnd_toStartOf="@+id/btnIncrease"
-        app:layout_constraintHorizontal_bias="0.111"
-        app:layout_constraintStart_toEndOf="@+id/btnDecrease"
-        app:layout_constraintTop_toBottomOf="@+id/gauge1"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintEnd_toStartOf="@+id/twoButton"
+        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintStart_toEndOf="@+id/zeroButton" />
 
     <Button
         android:id="@+id/twoButton"
