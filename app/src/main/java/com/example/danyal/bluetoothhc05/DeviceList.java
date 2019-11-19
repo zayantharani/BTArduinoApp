@@ -64,6 +64,7 @@ public class DeviceList extends AppCompatActivity {
         visibleDevices = (ListView) findViewById(R.id.listView);
         tinydb = new TinyDB(DeviceList.this);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        final BluetoothAdapter bAdapter = BluetoothAdapter.getDefaultAdapter();
 //        bluetoothAdapter.enable();
         if (bluetoothAdapter != null) {
             if (bluetoothAdapter.isEnabled()) {
@@ -71,10 +72,21 @@ public class DeviceList extends AppCompatActivity {
             }
 
             btnPaired.setOnClickListener(new View.OnClickListener() {
-
-
                 @Override
                 public void onClick(View v) {
+
+                    if(bAdapter == null)
+                    {
+                        Toast.makeText(getApplicationContext(),"Bluetooth Not Supported",Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        if(!bAdapter.isEnabled()){
+                            startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),1);
+                            Toast.makeText(getApplicationContext(),"Bluetooth Turned ON",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
                     pairedDevicesList();
                 }
             });
