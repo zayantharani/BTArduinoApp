@@ -113,9 +113,9 @@ public class DeviceList extends AppCompatActivity {
                 if (pairedDevices.size() > 0) {
                     int i=0;
                     for (BluetoothDevice bt : pairedDevices) {
-                        Log.i("sjbhjshjscsjhshjc","BT Name: " + bt.getName());
+                        Log.i("BTNAME","BT Name: " + bt.getName());
                         if(i<registeredDevicesList.size()) {
-                            Log.i("sjbhjshjscsjhshjc", "Device Name: " + registeredDevicesList.get(i++));
+                            Log.i("BTNAME", "Device Name: " + registeredDevicesList.get(i++));
                         }
                         if (registeredDevicesList.contains(bt.getName().toLowerCase()))
                             list.add(bt.getName().toString() + "\n" + bt.getAddress().toString());

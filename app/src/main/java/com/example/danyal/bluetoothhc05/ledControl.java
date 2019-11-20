@@ -570,14 +570,14 @@ public class ledControl extends AppCompatActivity {
         if ( btSocket != null ) {
             try {
                 for(int i=0;i<number.length;i++)
-                outputStream.write(number[i]);
+                    outputStream.write(number[i]);
             } catch (IOException e) {
                 msg("Error");
             }
 
         }
 
-        }
+    }
 
     private void Disconnect () {
         if ( btSocket!=null ) {
@@ -592,7 +592,7 @@ public class ledControl extends AppCompatActivity {
     }
 
     private void msg (String s) {
-      Log.i("Message:", s);
+        Log.i("Message:", s);
     }
 
     private class ConnectBT extends AsyncTask<Void, Void, Void> {
