@@ -204,7 +204,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
-        android:text="Room Temperature :"
+        android:text="Set Temperature :"
         android:textColor="@color/textColour"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"

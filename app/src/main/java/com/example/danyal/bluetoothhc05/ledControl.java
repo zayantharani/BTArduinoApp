@@ -109,11 +109,11 @@ public class ledControl extends AppCompatActivity {
         settingsImageView = findViewById(R.id.settingsImageView);
 
         sendSignalButton = (Button) findViewById(R.id.sendSignalButton);
-        tempTextView = (TextView) findViewById(R.id.tv_currentTemp); //Receiving
+        setTempTextView  = (TextView) findViewById(R.id.tv_currentTemp); //Sending
 //        deltaTEditText = (EditText) findViewById(R.id.deltaTEditText);
         bluetoothImageView = findViewById(R.id.bluetoothImageview);
         onOffSwitch = (Switch) findViewById(R.id.onOffSwitch);
-        setTempTextView =  findViewById(R.id.tv_ac_temp); //Sending
+        tempTextView=  findViewById(R.id.tv_ac_temp);//Receiving
 
         //TODO: Uncomment the line below and change the start activity.
 //        new ConnectBT().execute();
@@ -127,15 +127,31 @@ public class ledControl extends AppCompatActivity {
 
 
 
+        if (tinydb.getInt("TempType") == 0){
+            roomTemp=Integer.parseInt(tempTextView.getText().toString().substring(0,tempTextView.getText().toString().length()-2));
+//            tempTextView.setText(roomTemp + "°C");
+            cg1.setPointSize((int)(roomTemp * 3.857));
+            cg1.setVisibility(View.INVISIBLE);
+            cg1.setVisibility(View.VISIBLE);
+        }
+        else{
+//            tempTextView.setText(roomTemp + "°F");
+            roomTemp=Integer.parseInt(tempTextView.getText().toString().substring(0,tempTextView.getText().toString().length()-2));
+//            roomTemp=Integer.parseInt(tempTextView.getText().toString());
+            cg1.setPointSize((int)((roomTemp - 32) * 2.1428));
+            cg1.setVisibility(View.INVISIBLE);
+            cg1.setVisibility(View.VISIBLE);
+
+        }
         if(currentTempType == 0) {// Celcius
 
 
-            cg1.setPointSize((int)(initial_temp_val * 3.857));
+//            cg1.setPointSize((int)(initial_temp_val * 3.857));
 
             setTempTextView.setText(initial_temp_val + "°C");
 
-            cg1.setVisibility(View.INVISIBLE);
-            cg1.setVisibility(View.VISIBLE);
+//            cg1.setVisibility(View.INVISIBLE);
+//            cg1.setVisibility(View.VISIBLE);
 
 
             btnInc.setClickable(true);
@@ -151,13 +167,13 @@ public class ledControl extends AppCompatActivity {
 
                         setTempTextView.setText(c_temp_val + "°C");
 
-                        int x = (int)Math.ceil(cg1.getPointSize() + 3.857);
-                        if(x>270)x=270;
-                        cg1.setPointSize(x);
-                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
-                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
-                        cg1.setVisibility(View.INVISIBLE);
-                        cg1.setVisibility(View.VISIBLE);
+//                        int x = (int)Math.ceil(cg1.getPointSize() + 3.857);
+//                        if(x>270)x=270;
+//                        cg1.setPointSize(x);
+//                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
+//                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
+//                        cg1.setVisibility(View.INVISIBLE);
+//                        cg1.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -174,25 +190,25 @@ public class ledControl extends AppCompatActivity {
                         int x = (int)Math.floor(cg1.getPointSize() - 3.857);
                         if(x<0)x=0;
 
-                        cg1.setPointSize(x);
-                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
-                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
-
-                        cg1.setVisibility(View.INVISIBLE);
-                        cg1.setVisibility(View.VISIBLE);
+//                        cg1.setPointSize(x);
+//                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
+//                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
+//
+//                        cg1.setVisibility(View.INVISIBLE);
+//                        cg1.setVisibility(View.VISIBLE);
                     }
                 }
             });
         }
         else if(currentTempType == 1){
-            cg1.setPointSize((int)((initial_temp_val - 32) * 2.1428));
+//            cg1.setPointSize((int)((initial_temp_val - 32) * 2.1428));
 
 //            initial_temp_val = (initial_temp_val * 9 / 5) + 32;
                 setTempTextView.setText(initial_temp_val + "°F");
 
 
-            cg1.setVisibility(View.INVISIBLE);
-            cg1.setVisibility(View.VISIBLE);
+//            cg1.setVisibility(View.INVISIBLE);
+//            cg1.setVisibility(View.VISIBLE);
 
 
             btnInc.setClickable(true);
@@ -208,13 +224,13 @@ public class ledControl extends AppCompatActivity {
 
                         setTempTextView.setText(c_temp_val + "°F");
 
-                        int x = (int)Math.ceil(cg1.getPointSize() + 2.1428);
-                        if(x>270)x=270;
-                        cg1.setPointSize(x);
-                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
-                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
-                        cg1.setVisibility(View.INVISIBLE);
-                        cg1.setVisibility(View.VISIBLE);
+//                        int x = (int)Math.ceil(cg1.getPointSize() + 2.1428);
+//                        if(x>270)x=270;
+//                        cg1.setPointSize(x);
+//                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
+//                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
+//                        cg1.setVisibility(View.INVISIBLE);
+//                        cg1.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -228,14 +244,14 @@ public class ledControl extends AppCompatActivity {
                     if (c_temp_val >= 32) {
 
                         setTempTextView.setText(c_temp_val + "°F");
-                        int x = (int)Math.floor(cg1.getPointSize() - 2.1428);
-                        if(x<0)x=0;
-                        cg1.setPointSize(x);
-                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
-                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
-
-                        cg1.setVisibility(View.INVISIBLE);
-                        cg1.setVisibility(View.VISIBLE);
+//                        int x = (int)Math.floor(cg1.getPointSize() - 2.1428);
+//                        if(x<0)x=0;
+//                        cg1.setPointSize(x);
+//                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
+//                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
+//
+//                        cg1.setVisibility(View.INVISIBLE);
+//                        cg1.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -508,10 +524,19 @@ public class ledControl extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        if (tinydb.getInt("TempType") == 0)
+                                        if (tinydb.getInt("TempType") == 0){
                                             tempTextView.setText(roomTemp + "°C");
-                                        else
+                                            cg1.setPointSize((int)(roomTemp * 3.857));
+                                            cg1.setVisibility(View.INVISIBLE);
+                                            cg1.setVisibility(View.VISIBLE);
+                                        }
+                                        else{
                                             tempTextView.setText(roomTemp + "°F");
+                                            cg1.setPointSize((int)((roomTemp - 32) * 2.1428));
+                                            cg1.setVisibility(View.INVISIBLE);
+                                            cg1.setVisibility(View.VISIBLE);
+
+                                        }
                                     }
                                 });
                             }
