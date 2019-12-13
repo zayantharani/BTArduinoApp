@@ -101,8 +101,8 @@ public class DeviceList extends AppCompatActivity {
 
         pairedDevices = bluetoothAdapter.getBondedDevices();
         ArrayList list = new ArrayList();
-        ArrayList<String> registeredDevicesList=new ArrayList<String>();
-        registeredDevicesList = tinydb.getListString("PairedDevices");
+        ArrayList<Object> registeredDevicesList;
+        registeredDevicesList = tinydb.getListObject("PairedDevices",Device.class);
         if (registeredDevicesList != null) {
             if (registeredDevicesList.size() == 0) {
                 Intent intent = new Intent(DeviceList.this, SettingsActivity.class);
@@ -115,10 +115,15 @@ public class DeviceList extends AppCompatActivity {
                     for (BluetoothDevice bt : pairedDevices) {
                         Log.i("BTNAME","BT Name: " + bt.getName());
                         if(i<registeredDevicesList.size()) {
-                            Log.i("BTNAME", "Device Name: " + registeredDevicesList.get(i++));
+//                            Log.i("BTNAME", "Device Name: " + (Device)registeredDevicesList.get(i++).customDeviceName);
                         }
-                        if (registeredDevicesList.contains(bt.getName().toLowerCase()))
-                            list.add(bt.getName().toString() + "\n" + bt.getAddress().toString());
+                        for (Object o:
+                             registeredDevicesList) {
+                            Device device= (Device) o;
+                            if (device.deviceName.toLowerCase().equals(bt.getName().toLowerCase()))
+                                list.add(device.customDeviceName.toLowerCase() + "\n" + bt.getAddress().toString());
+                        }
+
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();

@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ public class SettingsActivity extends AppCompatActivity {
     RadioGroup rgTemperatureUnit;
     RadioButton rbSelectedRadio;
     EditText etNewDeviceName;
+    EditText etNewDeviceNameCustom;
     ImageView btnAddNewDevice;
     RecyclerView rvRegisteredDevices;
     static String deltaT;
@@ -81,10 +83,14 @@ public class SettingsActivity extends AppCompatActivity {
         btnAddNewDevice = findViewById(R.id.iv_add_new_device);
         rvRegisteredDevices = findViewById(R.id.rv_registered_devices);
 
+        etNewDeviceNameCustom=findViewById(R.id.et_new_device_name_custom);
+
         deviceList= new ArrayList<>();
-        ArrayList<String> pairedDevicesList=tinydb.getListString("PairedDevices");
-        for(String device:pairedDevicesList){
-            deviceList.add(new Device(device));
+        ArrayList<Object> pairedDevicesList=tinydb.getListObject("PairedDevices",Device.class);
+//                tinydb.getListString("PairedDevices");
+        for(Object Objdevice:pairedDevicesList){
+            Device device= (Device) Objdevice;
+            deviceList.add(new Device(device.deviceName,device.customDeviceName));
         }
         adapter = new MyListAdapter(deviceList);
         rvRegisteredDevices.setHasFixedSize(true);
@@ -95,17 +101,19 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //update the list view here
-
+                String customDeviceName=etNewDeviceNameCustom.getText().toString().toLowerCase();
                 String devicename = etNewDeviceName.getText().toString().toLowerCase();
-                if(!devicename.isEmpty()) {
-                    deviceList.add(new Device(devicename));
-                    ArrayList pairedDevicesList=tinydb.getListString("PairedDevices");
-                    pairedDevicesList.add(devicename);
-                    tinydb.putListString("PairedDevices",pairedDevicesList );
-
+                if(!devicename.isEmpty() && !customDeviceName.isEmpty()) {
+                    Device newDevice=new Device(devicename,customDeviceName);
+                    deviceList.add(newDevice);
+                    ArrayList<Object> pairedDevicesList=tinydb.getListObject("PairedDevices",Device.class);
+                    pairedDevicesList.add(newDevice);
+//                    tinydb.putListString("PairedDevices",pairedDevicesList );
+                    tinydb.putListObject("PairedDevices",pairedDevicesList);
                     adapter.notifyChange();
                     etNewDeviceName.setText("");
-                    Toast.makeText(SettingsActivity.this, devicename + " Added.", Toast.LENGTH_SHORT).show();
+                    etNewDeviceNameCustom.setText("");
+                    Toast.makeText(SettingsActivity.this, customDeviceName + " Added.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -136,14 +144,25 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, final int position) {
             final Device device = devices.get(position);
-            holder.textViewDeviceName.setText(device.deviceName);
+            holder.textViewDeviceName.setText(device.customDeviceName);
             holder.imageViewDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(SettingsActivity.this, deviceList.get(position).deviceName + " Deleted.", Toast.LENGTH_SHORT).show();
-                    ArrayList pairedDevicesList=tinydb.getListString("PairedDevices");
-                    pairedDevicesList.remove(deviceList.get(position).deviceName);
-                    tinydb.putListString("PairedDevices",pairedDevicesList );
+                    Toast.makeText(SettingsActivity.this, deviceList.get(position).customDeviceName + " Deleted.", Toast.LENGTH_SHORT).show();
+                    ArrayList<Object> pairedDevicesList=tinydb.getListObject("PairedDevices",Device.class);
+//                    ArrayList<Device> pairedDevicesList=n
+                    Log.d("POPOL", "onClick: "+pairedDevicesList.size());
+                    Log.d("POPOL", "onClick: "+deviceList.get(position).deviceName);
+//                    for (Object x:pairedDevicesList
+//                         ) {
+//
+//                    }
+
+                    pairedDevicesList.remove(position);
+                    Log.d("POPOL2", "onClick: "+pairedDevicesList.size());
+
+//                    tinydb.putListString("PairedDevices",pairedDevicesList );
+                    tinydb.putListObject("PairedDevices",pairedDevicesList);
                     deviceList.remove(position);
                     notifyChange();
 
