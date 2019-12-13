@@ -41,7 +41,7 @@ import pl.pawelkleczkowski.customgauge.CustomGauge;
 
 public class ledControl extends AppCompatActivity {
 
-    Button autoButton, manualButton, zeroButton, oneButton, twoButton, sendSignalButton;
+    Button autoButton, manualButton, zeroButton, twoButton, sendSignalButton;
     String address = null;
     static TextView tempTextView;
     CustomGauge cg1;
@@ -96,11 +96,12 @@ public class ledControl extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         deltaT =tinydb.getString("deltaTEditText");
+        Log.d("deltaT",  deltaT);
 
         autoButton = (Button) findViewById(R.id.btn_auto);
         manualButton = (Button) findViewById(R.id.btn_manual);
         zeroButton = (Button) findViewById(R.id.zeroButton);
-        oneButton = (Button) findViewById(R.id.oneButton);
+//        oneButton = (Button) findViewById(R.id.oneButton);
         twoButton= (Button) findViewById(R.id.twoButton);
         cg1 = findViewById(R.id.gauge1);
         btnInc = findViewById(R.id.btnIncrease);
@@ -114,7 +115,8 @@ public class ledControl extends AppCompatActivity {
         onOffSwitch = (Switch) findViewById(R.id.onOffSwitch);
         setTempTextView =  findViewById(R.id.tv_ac_temp); //Sending
 
-        new ConnectBT().execute();
+        //TODO: Uncomment the line below and change the start activity.
+//        new ConnectBT().execute();
 
 
         cg1.setPointSize(0);
@@ -129,13 +131,8 @@ public class ledControl extends AppCompatActivity {
 
 
             cg1.setPointSize((int)(initial_temp_val * 3.857));
-            if (tinydb.getInt("TempType") == 1) {
 
-//            initial_temp_val = (initial_temp_val * 9 / 5) + 32;
-                setTempTextView.setText(initial_temp_val + "°F");
-            } else {
-                setTempTextView.setText(initial_temp_val + "°C");
-            }
+            setTempTextView.setText(initial_temp_val + "°C");
 
             cg1.setVisibility(View.INVISIBLE);
             cg1.setVisibility(View.VISIBLE);
@@ -189,13 +186,10 @@ public class ledControl extends AppCompatActivity {
         }
         else if(currentTempType == 1){
             cg1.setPointSize((int)((initial_temp_val - 32) * 2.1428));
-            if (tinydb.getInt("TempType") == 1) {
 
 //            initial_temp_val = (initial_temp_val * 9 / 5) + 32;
                 setTempTextView.setText(initial_temp_val + "°F");
-            } else {
-                setTempTextView.setText(initial_temp_val + "°C");
-            }
+
 
             cg1.setVisibility(View.INVISIBLE);
             cg1.setVisibility(View.VISIBLE);
@@ -288,7 +282,7 @@ public class ledControl extends AppCompatActivity {
                 }
             }
         };
-        timerObj.schedule(timerTaskObj, 0, 15000);
+        timerObj.schedule(timerTaskObj, 0, 1000);
 
         autoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -302,7 +296,7 @@ public class ledControl extends AppCompatActivity {
                     autoButton.setBackgroundColor(autoButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
 //                    deltaTEditText.setVisibility(View.VISIBLE);
                     zeroButton.setVisibility(View.INVISIBLE);
-                    oneButton.setVisibility(View.INVISIBLE);
+//                    oneButton.setVisibility(View.INVISIBLE);
                     twoButton.setVisibility(View.INVISIBLE);
                     wingDirection = '2';
 
@@ -326,7 +320,7 @@ public class ledControl extends AppCompatActivity {
 
 //                    deltaTEditText.setVisibility(View.INVISIBLE);
                     zeroButton.setVisibility(View.VISIBLE);
-                    oneButton.setVisibility(View.VISIBLE);
+//                    oneButton.setVisibility(View.VISIBLE);
                     twoButton.setVisibility(View.VISIBLE);
 
 
@@ -343,7 +337,7 @@ public class ledControl extends AppCompatActivity {
             public void onClick (View v) {
                 if (switchIsChecked)
                 {
-                    oneButton.setBackgroundColor(oneButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+//                    oneButton.setBackgroundColor(oneButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
                     twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
                     zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
                     wingDirection = '0';
@@ -355,21 +349,21 @@ public class ledControl extends AppCompatActivity {
             }
         });
 
-        oneButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                if (switchIsChecked)
-                {
-                    zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
-                    twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
-                    oneButton.setBackgroundColor(oneButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
-                    wingDirection = '1';
-
-                }
-                else
-                    Toast.makeText(ledControl.this, "Please turn on the device", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        oneButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick (View v) {
+//                if (switchIsChecked)
+//                {
+//                    zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+//                    twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+//                    oneButton.setBackgroundColor(oneButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
+//                    wingDirection = '1';
+//
+//                }
+//                else
+//                    Toast.makeText(ledControl.this, "Please turn on the device", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         twoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -378,7 +372,7 @@ public class ledControl extends AppCompatActivity {
                 if (switchIsChecked)
                 {
                     zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
-                    oneButton.setBackgroundColor(oneButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+//                    oneButton.setBackgroundColor(oneButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
                     twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
                     wingDirection = '2';
 
@@ -469,8 +463,6 @@ public class ledControl extends AppCompatActivity {
                                 String rtp = Character.toString(mData.charAt(3)) + Character.toString(mData.charAt(4));
                                 try {
                                     initial_temp_val = Integer.parseInt(rtp);
-
-
                                 }
                                 catch (Exception e){
                                     Log.e("Exception",e.getMessage());
@@ -485,11 +477,14 @@ public class ledControl extends AppCompatActivity {
                                     Log.d("Comparison", Character.compare(mData.charAt(2),'0') + "");
                                     if (Character.compare(mData.charAt(2),'0') == 0) {
 
-
-
+                                        Log.d("DeltaT out",deltaT );
+                                        if (deltaT.length() == 0)
+                                        {
+                                            Toast.makeText(ledControl.this, "Please set half point in settings", Toast.LENGTH_SHORT).show();
+                                        }
                                         if (setTempTextView.getText().toString().length() > 1 && deltaT.length() >= 1) {
-
-                                            int setTemp = Integer.parseInt(setTempTextView.getText().toString());
+                                            int index = setTempTextView.getText().toString().indexOf("°");
+                                            int setTemp = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
                                             Log.d("Set Temp: ", Integer.toString(setTemp));
                                             int deltaTemp = Integer.parseInt(deltaT);
                                             Log.d("delta Temp: ", Integer.toString(deltaTemp));

@@ -2,11 +2,11 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ledControlActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ledControl"
-    android:id="@+id/ledControlActivity"
-    android:background="@color/backgroundColour">
+    android:background="@color/backgroundColour"
+    tools:context=".ledControl">
 
 
     <pl.pawelkleczkowski.customgauge.CustomGauge
@@ -74,7 +74,7 @@
         android:src="@drawable/ic_minus"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnIncrease"
-        app:layout_constraintHorizontal_bias="0.14"
+        app:layout_constraintHorizontal_bias="0.068"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gauge1"
         app:layout_constraintVertical_bias="0.0" />
@@ -85,8 +85,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="88dp"
         android:layout_marginTop="92dp"
-        android:background="@color/buttonColourEnabled"
-        android:text="COOL"
+        android:background="@color/buttonColourDisabled"
+        android:text="MANUAL"
         android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -97,8 +97,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"
         android:layout_marginEnd="96dp"
-        android:background="@color/buttonColourDisabled"
-        android:text="HOT"
+        android:background="@color/buttonColourEnabled"
+        android:text="AUTO"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -115,56 +115,46 @@
         app:layout_constraintStart_toStartOf="@+id/gauge1"
         app:layout_constraintTop_toTopOf="@+id/gauge1" />
 
+
     <Button
         android:id="@+id/zeroButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="108dp"
+        android:layout_marginBottom="204dp"
         android:background="@color/buttonColourEnabled"
-        android:text="OFF"
+        android:text="Close"
+        android:visibility="invisible"
         android:textColor="@color/textColour"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnDecrease"
+        app:layout_constraintEnd_toEndOf="@+id/btnDecrease"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/oneButton"
-        android:layout_width="91dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="44dp"
-        android:background="@color/buttonColourDisabled"
-        android:text="HALF"
-        android:textColor="@color/textColour"
-        app:layout_constraintBottom_toTopOf="@+id/sendSignalButton"
-        app:layout_constraintEnd_toStartOf="@+id/twoButton"
-        app:layout_constraintHorizontal_bias="0.515"
-        app:layout_constraintStart_toEndOf="@+id/zeroButton" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnDecrease"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/twoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="108dp"
+        android:layout_marginBottom="184dp"
         android:background="@color/buttonColourDisabled"
-        android:text="FULL"
+        android:text="Open"
+        android:visibility="invisible"
         android:textColor="@color/textColour"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnIncrease" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/btnIncrease"
+        app:layout_constraintTop_toBottomOf="@+id/btnIncrease"
+        app:layout_constraintVertical_bias="0.737" />
 
     <Switch
         android:id="@+id/onOffSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:textColor="@color/textColour"
         android:text="Off"
+        android:textColor="@color/textColour"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -185,17 +175,16 @@
         android:id="@+id/sendSignalButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="44dp"
         android:background="@color/buttonColourEnabled"
         android:text="Send"
         android:textColor="@color/textColour"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.524"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gauge1"
+        app:layout_constraintVertical_bias="0.817" />
 
     <ImageView
         android:id="@+id/settingsImageView"

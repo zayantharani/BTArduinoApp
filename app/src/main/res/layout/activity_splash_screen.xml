@@ -3,9 +3,19 @@
     android:orientation="vertical" android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <ImageView android:id="@+id/splashscreen" android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:src="@drawable/ic_logo_bita"
-        android:layout_gravity="center"/>
+    <ImageView
+        android:id="@+id/splashscreen"
+        android:layout_width="wrap_content"
+        android:layout_height="380dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_logo_bita" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DEMO APP"
+        android:textSize="50dp"
+        android:layout_margin="80dp"/>
 
 </LinearLayout>
