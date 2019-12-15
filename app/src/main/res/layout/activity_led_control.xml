@@ -120,43 +120,36 @@
         android:id="@+id/zeroButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="204dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="72dp"
         android:background="@color/buttonColourEnabled"
         android:text="Close"
-        android:visibility="invisible"
         android:textColor="@color/textColour"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btnDecrease"
-        app:layout_constraintHorizontal_bias="1.0"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnDecrease"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/btnDecrease" />
 
     <Button
         android:id="@+id/twoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="184dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="40dp"
         android:background="@color/buttonColourDisabled"
         android:text="Open"
-        android:visibility="invisible"
         android:textColor="@color/textColour"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/btnIncrease"
-        app:layout_constraintTop_toBottomOf="@+id/btnIncrease"
-        app:layout_constraintVertical_bias="0.737" />
+        app:layout_constraintTop_toBottomOf="@+id/btnIncrease" />
 
     <Switch
         android:id="@+id/onOffSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="176dp"
         android:layout_marginTop="24dp"
         android:text="Off"
         android:textColor="@color/textColour"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -166,8 +159,7 @@
         android:layout_height="38dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.741"
-        app:layout_constraintStart_toEndOf="@+id/onOffSwitch"
+        app:layout_constraintStart_toEndOf="@+id/settingsImageView"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_bluetooth" />
 
@@ -175,25 +167,21 @@
         android:id="@+id/sendSignalButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="44dp"
+        android:layout_marginTop="112dp"
         android:background="@color/buttonColourEnabled"
         android:text="Send"
         android:textColor="@color/textColour"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gauge1"
-        app:layout_constraintVertical_bias="0.817" />
+        app:layout_constraintEnd_toStartOf="@+id/twoButton"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toEndOf="@+id/zeroButton"
+        app:layout_constraintTop_toBottomOf="@+id/gauge1" />
 
     <ImageView
         android:id="@+id/settingsImageView"
         android:layout_width="26dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toStartOf="@+id/bluetoothImageview"
-        app:layout_constraintHorizontal_bias="0.776"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="28dp"
         app:layout_constraintStart_toEndOf="@+id/onOffSwitch"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_settings_gears" />
