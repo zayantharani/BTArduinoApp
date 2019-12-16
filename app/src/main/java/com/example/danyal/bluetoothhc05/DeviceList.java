@@ -121,7 +121,7 @@ public class DeviceList extends AppCompatActivity {
                              registeredDevicesList) {
                             Device device= (Device) o;
                             if (device.deviceName.toLowerCase().equals(bt.getName().toLowerCase()))
-                                list.add(device.customDeviceName.toLowerCase() + "\n" + bt.getAddress().toString());
+                                list.add(device.customDeviceName.toUpperCase() + "\n" + bt.getAddress().toString());
                         }
 
                     }
