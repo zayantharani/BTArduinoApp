@@ -452,8 +452,7 @@ public class ledControl extends AppCompatActivity {
                 byte[] buffer = new byte[1];
                 int bytes;
                 String mData = "";
-                while (true) {
-                String mData="";
+//                String mData="";
                 while(isBtConnected) {
 
                     if (btSocket.isConnected()) {
@@ -549,14 +548,14 @@ public class ledControl extends AppCompatActivity {
 
                         } catch (IOException e) {
                             e.printStackTrace();
+                            break;
                         }
 
                     }
 
                 }
 
-            }
-        }).start();
+        }}).start();
     }
 
     private void resetConnection() {
@@ -588,9 +587,8 @@ public class ledControl extends AppCompatActivity {
 
 
     // Function to convert an Input Stream to String in Java
-//    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static String getString(InputStream in) throws IOException {
+        public static String getString(InputStream in) throws IOException {
         Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
         BufferedReader br = new BufferedReader(reader);
 
