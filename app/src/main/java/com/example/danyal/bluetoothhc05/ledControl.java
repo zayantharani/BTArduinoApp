@@ -453,7 +453,7 @@ public class ledControl extends AppCompatActivity {
                 byte[] buffer = new byte[1];
                 int bytes;
                 String mData="";
-                while(true) {
+                while(isBtConnected) {
 
                     try {
                         bytes = inputStream.read(buffer);
@@ -551,6 +551,7 @@ public class ledControl extends AppCompatActivity {
 
                     } catch (IOException e) {
                         e.printStackTrace();
+                        break;
                     }
                 }
 
