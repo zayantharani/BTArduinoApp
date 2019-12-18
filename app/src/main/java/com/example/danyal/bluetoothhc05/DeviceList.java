@@ -105,7 +105,7 @@ public class DeviceList extends AppCompatActivity {
     private void pairedDevicesList() {
 
         pairedDevices = bluetoothAdapter.getBondedDevices();
-        ArrayList list = new ArrayList();
+        final ArrayList list = new ArrayList();
         ArrayList<Object> registeredDevicesList;
         registeredDevicesList = tinydb.getListObject("PairedDevices",Device.class);
         if (registeredDevicesList != null) {
@@ -125,8 +125,9 @@ public class DeviceList extends AppCompatActivity {
                         for (Object o:
                              registeredDevicesList) {
                             Device device= (Device) o;
-                            if (device.deviceName.toLowerCase().equals(bt.getName().toLowerCase()))
+                            if (device.deviceName.toLowerCase().equals(bt.getName().toLowerCase())){
                                 list.add(device.deviceName.toUpperCase() + "\n" + bt.getAddress().toString());
+                            }
                         }
 
                     }
@@ -144,10 +145,10 @@ public class DeviceList extends AppCompatActivity {
         visibleDevices.setOnItemClickListener(myListClickListener);
         visibleDevices.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
                 String nameAndAddress=((TextView)view.findViewById(R.id.tv_visible_device_name)).getText().toString();
                 Toast.makeText(DeviceList.this, nameAndAddress, Toast.LENGTH_SHORT).show();
-                String[] nameAndAddressArr=nameAndAddress.split("\n");
+                final String[] nameAndAddressArr=nameAndAddress.split("\n");
 //                tinydb.putString("");
 
 
@@ -174,6 +175,8 @@ public class DeviceList extends AppCompatActivity {
                         String m_Text = "";
 
                         m_Text = input.getText().toString();
+                        tinydb.putString(nameAndAddressArr[1],m_Text);
+                        list.set(i,m_Text);
                         Toast.makeText(DeviceList.this, "YOu text : "+m_Text, Toast.LENGTH_SHORT).show();
                     }
                 });
