@@ -303,7 +303,7 @@ public class ledControl extends AppCompatActivity {
                 }
             }
         };
-        timerObj.schedule(timerTaskObj, 0, 5000);
+        timerObj.schedule(timerTaskObj, 0, 1000);
 
         autoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -470,29 +470,30 @@ public class ledControl extends AppCompatActivity {
                                 final String filterData = mData;
                                 Log.d("tester4", mData);
 
-                                if (mData.charAt(6) == '1') {
-                                    //Acknoledgement
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(ledControl.this, "Acknowledgement Received", Toast.LENGTH_SHORT).show();
+                                if (mData.length() > 6) {
+                                    if (mData.charAt(6) == '1') {
+                                        //Acknoledgement
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(ledControl.this, "Acknowledgement Received", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    } else {
+                                        String rtp = Character.toString(mData.charAt(3)) + Character.toString(mData.charAt(4));
+                                        try {
+                                            initial_temp_val = Integer.parseInt(rtp);
+                                        } catch (Exception e) {
+                                            Log.e("Exception", e.getMessage());
                                         }
-                                    });
-                                } else {
-                                    String rtp = Character.toString(mData.charAt(3)) + Character.toString(mData.charAt(4));
-                                    try {
-                                        initial_temp_val = Integer.parseInt(rtp);
-                                    } catch (Exception e) {
-                                        Log.e("Exception", e.getMessage());
-                                    }
-                                    try {
-                                        roomTemp = Integer.parseInt(rtp);
+                                        try {
+                                            roomTemp = Integer.parseInt(rtp);
 
-                                        if (tinydb.getInt("TempType") == 1)
-                                            roomTemp = (roomTemp * 9 / 5) + 32;
+                                            if (tinydb.getInt("TempType") == 1)
+                                                roomTemp = (roomTemp * 9 / 5) + 32;
 
-                                        Log.d("RTP: ", Integer.toString(roomTemp));
-                                        if (oppMode == 0) {
+                                            Log.d("RTP: ", Integer.toString(roomTemp));
+                                            if (oppMode == 0) {
 
 //                                        Log.d("DeltaT out",deltaT );
 //                                        if (deltaT.length() == 0)
@@ -500,19 +501,21 @@ public class ledControl extends AppCompatActivity {
 //                                            Toast.makeText(ledControl.this, "Please set half point in settings", Toast.LENGTH_SHORT).show();
 //                                        }
 
-                                            if (setTempTextView.getText().toString().length() > 1) {
-                                                int index = setTempTextView.getText().toString().indexOf("°");
-                                                int setTemp = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
-                                                Log.d("Set Temp: ", Integer.toString(setTemp));
+                                                if (setTempTextView.getText().toString().length() > 1) {
+                                                    int index = setTempTextView.getText().toString().indexOf("°");
+                                                    int setTemp = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
+                                                    Log.d("Set Temp: ", Integer.toString(setTemp));
 //                                                int deltaTemp = Integer.parseInt(deltaT);
 //                                                Log.d("delta Temp: ", Integer.toString(deltaTemp));
 
-                                                //*********************For cooler mode*****************
-                                                if (roomTemp > setTemp) {
+                                                    //*********************For cooler mode*****************
 
                                                     if ((roomTemp - setTemp) > 0) {
                                                         Log.d("Automatic Status", "Sending 2 for wing direction");
                                                         wingDirection = '2';
+                                                        String setTempStr = Integer.toString(setTemp);
+                                                        char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
+                                                        sendSignal(b);
 
                                                     } else if ((roomTemp - setTemp) <= 0) {
                                                         Log.d("Automatic Status", "Sending 0 for wing direction");
@@ -520,20 +523,17 @@ public class ledControl extends AppCompatActivity {
                                                         char b[] = {'<', '1', oppMode, '-', '-', wingDirection, '-', '>'};
                                                         sendSignal(b);
                                                     }
-                                                } else {
-                                                    Toast.makeText(ledControl.this, "Please decrease Set Temperature", Toast.LENGTH_SHORT).show();
-                                                }
 
 
-                                                //*********************For heater mode*****************
-                                                //TODO: Add the UI for Mode of Operation in Settings and Save in Tiny dp. We'll check the mode from tiny dp and then perform opp.
+                                                    //*********************For heater mode*****************
+                                                    //TODO: Add the UI for Mode of Operation in Settings and Save in Tiny dp. We'll check the mode from tiny dp and then perform opp.
 //                                                if (setTemp > roomTemp) {
 //
 //                                                    if ((setTemp - roomTemp) > 0) {
 //                                                        Log.d("Automatic Status", "Sending 2 for wing direction");
 //                                                        wingDirection = '2';
 //
-//                                                    } else if ((setTemp - roomTemp) == 0) {
+//                                                    } else if ((setTemp - roomTemp) <= 0) {
 //                                                        Log.d("Automatic Status", "Sending 0 for wing direction");
 //                                                        wingDirection = '0';
 //                                                        char b[] = {'<', '1', oppMode, '-', '-', wingDirection, '-', '>'};
@@ -546,30 +546,32 @@ public class ledControl extends AppCompatActivity {
 //                                                }
 //
 
+                                                }
                                             }
+                                        } catch (Exception e) {
+                                            Log.e("Unable to convert", e.getMessage());
                                         }
-                                    } catch (Exception e) {
-                                        Log.e("Unable to convert", e.getMessage());
+
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (tinydb.getInt("TempType") == 0) {
+                                                    tempTextView.setText(roomTemp + "°C");
+                                                    cg1.setPointSize((int) (roomTemp * 3.857));
+                                                    cg1.setVisibility(View.INVISIBLE);
+                                                    cg1.setVisibility(View.VISIBLE);
+                                                } else {
+                                                    tempTextView.setText(roomTemp + "°F");
+                                                    cg1.setPointSize((int) ((roomTemp - 32) * 2.1428));
+                                                    cg1.setVisibility(View.INVISIBLE);
+                                                    cg1.setVisibility(View.VISIBLE);
+
+                                                }
+                                            }
+                                        });
                                     }
-
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (tinydb.getInt("TempType") == 0) {
-                                                tempTextView.setText(roomTemp + "°C");
-                                                cg1.setPointSize((int) (roomTemp * 3.857));
-                                                cg1.setVisibility(View.INVISIBLE);
-                                                cg1.setVisibility(View.VISIBLE);
-                                            } else {
-                                                tempTextView.setText(roomTemp + "°F");
-                                                cg1.setPointSize((int) ((roomTemp - 32) * 2.1428));
-                                                cg1.setVisibility(View.INVISIBLE);
-                                                cg1.setVisibility(View.VISIBLE);
-
-                                            }
-                                        }
-                                    });
                                 }
+
 
                                 mData = "";
 
