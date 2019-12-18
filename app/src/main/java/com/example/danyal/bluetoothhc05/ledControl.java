@@ -506,55 +506,74 @@ public class ledControl extends AppCompatActivity {
 
                                                     //*********************For cooler mode*****************
 
-                                                    if ((roomTemp - setTemp) > 0) {
-                                                        if (!wingOpenFlag) {
-                                                            wingOpenFlag = true;
-                                                            Log.d("Automatic Status", "Sending 2 for wing direction");
+                                                    if (tinydb.getInt("TempMode") == 0) {
+                                                        if ((roomTemp - setTemp) > 0) {
+                                                            if (!wingOpenFlag) {
+                                                                wingOpenFlag = true;
+                                                                Log.d("Automatic Status", "Sending 2 for wing direction");
 
-                                                            wingDirection = '2';
+                                                                wingDirection = '2';
 
-                                                            String setTempStr = Integer.toString(setTemp);
-                                                            Log.d("SetTempStr", setTempStr);
+                                                                String setTempStr = Integer.toString(setTemp);
+                                                                Log.d("SetTempStr", setTempStr);
 
-                                                            char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
-                                                            sendSignal(b);
+                                                                char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
+                                                                sendSignal(b);
+                                                            }
+
+
+                                                        } else if ((roomTemp - setTemp) <= 0) {
+                                                            if (wingOpenFlag) {
+                                                                wingOpenFlag = false;
+                                                                Log.d("Automatic Status", "Sending 0 for wing direction");
+
+                                                                wingDirection = '0';
+
+                                                                String setTempStr = Integer.toString(setTemp);
+                                                                Log.d("SetTempStr", setTempStr);
+                                                                char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
+                                                                sendSignal(b);
+                                                            }
                                                         }
+                                                    } else {
+                                                        //*********************For heater mode*****************
+                                                        //TODO: Add the UI for Mode of Operation in Settings and Save in Tiny dp. We'll check the mode from tiny dp and then perform opp.
+                                                        if (setTemp > roomTemp) {
 
+                                                            if ((setTemp - roomTemp) > 0) {
+                                                                if (!wingOpenFlag) {
+                                                                    wingOpenFlag = true;
+                                                                    Log.d("Automatic Status", "Sending 2 for wing direction");
 
-                                                    } else if ((roomTemp - setTemp) <= 0) {
-                                                        if (wingOpenFlag) {
-                                                            wingOpenFlag = false;
-                                                            Log.d("Automatic Status", "Sending 0 for wing direction");
+                                                                    wingDirection = '2';
 
-                                                            wingDirection = '0';
+                                                                    String setTempStr = Integer.toString(setTemp);
+                                                                    Log.d("SetTempStr", setTempStr);
 
-                                                            String setTempStr = Integer.toString(setTemp);
-                                                            Log.d("SetTempStr", setTempStr);
-                                                            char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
-                                                            sendSignal(b);
+                                                                    char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
+                                                                    sendSignal(b);
+                                                                }
+
+                                                            } else if ((setTemp - roomTemp) <= 0) {
+                                                                if (wingOpenFlag) {
+                                                                    wingOpenFlag = false;
+                                                                    Log.d("Automatic Status", "Sending 0 for wing direction");
+
+                                                                    wingDirection = '0';
+
+                                                                    String setTempStr = Integer.toString(setTemp);
+                                                                    Log.d("SetTempStr", setTempStr);
+                                                                    char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
+                                                                    sendSignal(b);
+                                                                }
+                                                            }
+
+                                                        } else {
+                                                            Toast.makeText(ledControl.this, "Please increase Set Temperature", Toast.LENGTH_SHORT).show();
                                                         }
                                                     }
 
 
-                                                    //*********************For heater mode*****************
-                                                    //TODO: Add the UI for Mode of Operation in Settings and Save in Tiny dp. We'll check the mode from tiny dp and then perform opp.
-//                                                if (setTemp > roomTemp) {
-//
-//                                                    if ((setTemp - roomTemp) > 0) {
-//                                                        Log.d("Automatic Status", "Sending 2 for wing direction");
-//                                                        wingDirection = '2';
-//
-//                                                    } else if ((setTemp - roomTemp) <= 0) {
-//                                                        Log.d("Automatic Status", "Sending 0 for wing direction");
-//                                                        wingDirection = '0';
-//                                                        char b[] = {'<', '1', oppMode, '-', '-', wingDirection, '-', '>'};
-//                                                        sendSignal(b);
-//                                                    }
-//
-//                                                }
-//                                                else{
-//                                                    Toast.makeText(ledControl.this, "Please increase Set Temperature", Toast.LENGTH_SHORT).show();
-//                                                }
 //
 
                                                 }

@@ -157,7 +157,8 @@ public class DeviceList extends AppCompatActivity {
                 //Chaping
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(DeviceList.this, R.style.AlertDialogTheme);
-                builder.setTitle("Title");
+                builder.setTitle("Rename");
+                builder.setMessage("Rename the BT Device");
 
                 // Set up the input
                 final EditText input = new EditText(DeviceList.this);
