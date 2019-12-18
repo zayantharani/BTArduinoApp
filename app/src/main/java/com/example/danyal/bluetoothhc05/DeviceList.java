@@ -155,7 +155,7 @@ public class DeviceList extends AppCompatActivity {
 
                 //Chaping
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(DeviceList.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(DeviceList.this, R.style.AlertDialogTheme);
                 builder.setTitle("Title");
 
                 // Set up the input
@@ -182,7 +182,7 @@ public class DeviceList extends AppCompatActivity {
                 });
 //                builder.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(neededColor);
 //                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(neededColor);
-//                builder.show();
+                builder.show();
 
 
 
