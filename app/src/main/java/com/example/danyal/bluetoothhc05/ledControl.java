@@ -53,6 +53,8 @@ public class ledControl extends AppCompatActivity {
     static char oppMode = 0;
     static char wingDirection = 2;
     int roomTemp;
+    boolean wingOpenFlag = false;
+
 
     private ProgressDialog progress;
     Switch onOffSwitch;
@@ -342,6 +344,18 @@ public class ledControl extends AppCompatActivity {
 //                    oneButton.setVisibility(View.VISIBLE);
                     twoButton.setVisibility(View.VISIBLE);
 
+                    if (wingOpenFlag)
+                    {
+                        twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
+                        zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+                    }
+                    else
+                    {
+                        zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
+                        twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
+                    }
+
+
 
                 } else
                     Toast.makeText(ledControl.this, "Please turn on the device", Toast.LENGTH_SHORT).show();
@@ -357,6 +371,7 @@ public class ledControl extends AppCompatActivity {
                     twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
                     zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
                     wingDirection = '0';
+                    wingOpenFlag = false;
 
                 } else
                     Toast.makeText(ledControl.this, "Please turn on the device", Toast.LENGTH_SHORT).show();
@@ -389,6 +404,7 @@ public class ledControl extends AppCompatActivity {
 //                    oneButton.setBackgroundColor(oneButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
                     twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
                     wingDirection = '2';
+                    wingOpenFlag = true;
 
                 } else
                     Toast.makeText(ledControl.this, "Please turn on the device", Toast.LENGTH_SHORT).show();
@@ -457,7 +473,6 @@ public class ledControl extends AppCompatActivity {
                 byte[] buffer = new byte[1];
                 int bytes;
                 String mData = "";
-                boolean wingOpenFlag = false;
                 while (isBtConnected) {
 
                     if (btSocket.isConnected()) {
@@ -616,7 +631,12 @@ public class ledControl extends AppCompatActivity {
 
                             Intent intent = new Intent(ledControl.this, DeviceList.class);
                             finish();
-                            Toast.makeText(ledControl.this, "Bluetooth Disconnected", Toast.LENGTH_SHORT).show();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(ledControl.this, "Bluetooth Disconnected", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             startActivity(intent);
                             resetConnection();
 
