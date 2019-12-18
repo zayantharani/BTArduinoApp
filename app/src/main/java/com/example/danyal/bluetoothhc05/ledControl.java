@@ -303,7 +303,7 @@ public class ledControl extends AppCompatActivity {
                 }
             }
         };
-        timerObj.schedule(timerTaskObj, 0, 1000);
+        timerObj.schedule(timerTaskObj, 0, 5000);
 
         autoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -458,6 +458,7 @@ public class ledControl extends AppCompatActivity {
                 byte[] buffer = new byte[1];
                 int bytes;
                 String mData = "";
+                boolean wingOpenFlag = false;
                 while (isBtConnected) {
 
                     if (btSocket.isConnected()) {
@@ -469,7 +470,7 @@ public class ledControl extends AppCompatActivity {
                             if (data.equals(">")) {
                                 final String filterData = mData;
                                 Log.d("tester4", mData);
-                                if(mData.length()>6) {
+                                if (mData.length() > 6) {
                                     if (mData.charAt(6) == '1') {
                                         //Acknoledgement
                                         runOnUiThread(new Runnable() {
@@ -507,17 +508,32 @@ public class ledControl extends AppCompatActivity {
                                                     //*********************For cooler mode*****************
 
                                                     if ((roomTemp - setTemp) > 0) {
-                                                        Log.d("Automatic Status", "Sending 2 for wing direction");
-                                                        wingDirection = '2';
-                                                        String setTempStr = Integer.toString(setTemp);
-                                                        char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
-                                                        sendSignal(b);
+                                                        if (!wingOpenFlag) {
+                                                            wingOpenFlag = true;
+                                                            Log.d("Automatic Status", "Sending 2 for wing direction");
+
+                                                            wingDirection = '2';
+
+                                                            String setTempStr = Integer.toString(setTemp);
+                                                            Log.d("SetTempStr", setTempStr);
+
+                                                            char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
+                                                            sendSignal(b);
+                                                        }
+
 
                                                     } else if ((roomTemp - setTemp) <= 0) {
-                                                        Log.d("Automatic Status", "Sending 0 for wing direction");
-                                                        wingDirection = '0';
-                                                        char b[] = {'<', '1', oppMode, '-', '-', wingDirection, '-', '>'};
-                                                        sendSignal(b);
+                                                        if (wingOpenFlag) {
+                                                            wingOpenFlag = false;
+                                                            Log.d("Automatic Status", "Sending 0 for wing direction");
+
+                                                            wingDirection = '0';
+
+                                                            String setTempStr = Integer.toString(setTemp);
+                                                            Log.d("SetTempStr", setTempStr);
+                                                            char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
+                                                            sendSignal(b);
+                                                        }
                                                     }
 
 
@@ -566,7 +582,7 @@ public class ledControl extends AppCompatActivity {
                                             }
                                         });
                                     }
-                                }else{
+                                } else {
                                     Log.d("CustomErrorzz", "run: ganda format");
                                 }
                                 mData = "";
