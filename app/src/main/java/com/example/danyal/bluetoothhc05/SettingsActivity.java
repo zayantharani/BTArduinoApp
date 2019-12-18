@@ -121,11 +121,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-
-//    @Override
-//    public void onBackPressed() {
-//        //TODO: Dekh lou yaar isseh bhy
-//    }
     public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
         ArrayList<Device> devices;
         MyListAdapter(ArrayList<Device> devices) {

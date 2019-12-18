@@ -13,15 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -53,8 +50,8 @@ public class ledControl extends AppCompatActivity {
     TextView setTempTextView;
     ImageView bluetoothImageView, settingsImageView;
     static Context context;
-    static char oppMode;
-    static char wingDirection;
+    static char oppMode = 0;
+    static char wingDirection = 2;
     int roomTemp;
 
     private ProgressDialog progress;
@@ -91,7 +88,7 @@ public class ledControl extends AppCompatActivity {
         if (currentTempType == 0) {
             initial_temp_val = 40;
         } else if (currentTempType == 1) {
-            initial_temp_val = 65;
+            initial_temp_val = 104;
         }
         setContentView(R.layout.activity_led_control);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -406,9 +403,18 @@ public class ledControl extends AppCompatActivity {
 
                 if (switchIsChecked) {
 
-                    String tempEditText = setTempTextView.getText().toString();
-                    if (tempEditText.length() > 1) {
-                        char b[] = {'<', '1', oppMode, tempEditText.charAt(0), tempEditText.charAt(1), wingDirection, '-', '>'};
+                    String setTempText = setTempTextView.getText().toString().substring(0, setTempTextView.getText().toString().indexOf('°'));
+                    if (setTempText.length() > 1) {
+                        //Converting to centigrade
+                        if (tinydb.getInt("TempType") == 1) {
+                            msg("Converting to Centigrade");
+
+                            Integer setTempInt = Integer.parseInt(setTempText);
+                            setTempInt = (setTempInt - 32) * 5 / 9;
+                            setTempText = setTempInt.toString();
+                        }
+
+                        char b[] = {'<', '1', oppMode, setTempText.charAt(0), setTempText.charAt(1), wingDirection, '-', '>'};
                         sendSignal(b);
                         msg("Signal Sent");
 
@@ -452,16 +458,13 @@ public class ledControl extends AppCompatActivity {
                 byte[] buffer = new byte[1];
                 int bytes;
                 String mData = "";
-//                String mData="";
-                while(isBtConnected) {
+                while (isBtConnected) {
 
                     if (btSocket.isConnected()) {
                         try {
                             bytes = inputStream.read(buffer);
                             String data = new String(buffer);
 
-//                        Log.d("tester", String.valueOf(bytes));
-//                        Log.d("tester2", getString(btSocket.getInputStream()));
                             Log.d("tester3", "" + data);
                             if (data.equals(">")) {
                                 final String filterData = mData;
@@ -486,36 +489,58 @@ public class ledControl extends AppCompatActivity {
                                                 roomTemp = (roomTemp * 9 / 5) + 32;
 
                                             Log.d("RTP: ", Integer.toString(roomTemp));
-                                            Log.d("Comparison", Character.compare(mData.charAt(2), '0') + "");
-                                            if (Character.compare(mData.charAt(2), '0') == 0) {
+                                            if (oppMode == 0) {
 
 //                                        Log.d("DeltaT out",deltaT );
 //                                        if (deltaT.length() == 0)
 //                                        {
 //                                            Toast.makeText(ledControl.this, "Please set half point in settings", Toast.LENGTH_SHORT).show();
 //                                        }
-                                                if (setTempTextView.getText().toString().length() > 1 && deltaT.length() >= 1) {
+
+                                                if (setTempTextView.getText().toString().length() > 1) {
                                                     int index = setTempTextView.getText().toString().indexOf("°");
                                                     int setTemp = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
                                                     Log.d("Set Temp: ", Integer.toString(setTemp));
-                                                    int deltaTemp = Integer.parseInt(deltaT);
-                                                    Log.d("delta Temp: ", Integer.toString(deltaTemp));
+//                                                int deltaTemp = Integer.parseInt(deltaT);
+//                                                Log.d("delta Temp: ", Integer.toString(deltaTemp));
 
-                                                    if ((roomTemp - setTemp) > 0){
+                                                    //*********************For cooler mode*****************
+
+                                                    if ((roomTemp - setTemp) > 0) {
+                                                        Log.d("Automatic Status", "Sending 2 for wing direction");
                                                         wingDirection = '2';
-                                                        String setTempStr=Integer.toString(setTemp);
+                                                        String setTempStr = Integer.toString(setTemp);
                                                         char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
                                                         sendSignal(b);
-                                                    }
 
-                                                    else if ((roomTemp - setTemp) == 0) {
+                                                    } else if ((roomTemp - setTemp) <= 0) {
+                                                        Log.d("Automatic Status", "Sending 0 for wing direction");
                                                         wingDirection = '0';
                                                         char b[] = {'<', '1', oppMode, '-', '-', wingDirection, '-', '>'};
                                                         sendSignal(b);
-
                                                     }
-//                                            else if ((roomTemp - setTemp) <= deltaTemp)
-//                                                wingDirection = '1';
+
+
+                                                    //*********************For heater mode*****************
+                                                    //TODO: Add the UI for Mode of Operation in Settings and Save in Tiny dp. We'll check the mode from tiny dp and then perform opp.
+//                                                if (setTemp > roomTemp) {
+//
+//                                                    if ((setTemp - roomTemp) > 0) {
+//                                                        Log.d("Automatic Status", "Sending 2 for wing direction");
+//                                                        wingDirection = '2';
+//
+//                                                    } else if ((setTemp - roomTemp) <= 0) {
+//                                                        Log.d("Automatic Status", "Sending 0 for wing direction");
+//                                                        wingDirection = '0';
+//                                                        char b[] = {'<', '1', oppMode, '-', '-', wingDirection, '-', '>'};
+//                                                        sendSignal(b);
+//                                                    }
+//
+//                                                }
+//                                                else{
+//                                                    Toast.makeText(ledControl.this, "Please increase Set Temperature", Toast.LENGTH_SHORT).show();
+//                                                }
+//
 
                                                 }
                                             }
@@ -561,7 +586,8 @@ public class ledControl extends AppCompatActivity {
 
                 }
 
-        }}).start();
+            }
+        }).start();
     }
 
     private void resetConnection() {
@@ -594,7 +620,7 @@ public class ledControl extends AppCompatActivity {
 
     // Function to convert an Input Stream to String in Java
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-        public static String getString(InputStream in) throws IOException {
+    public static String getString(InputStream in) throws IOException {
         Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
         BufferedReader br = new BufferedReader(reader);
 
