@@ -128,9 +128,12 @@ public class DeviceList extends AppCompatActivity {
                             if (device.deviceName.toLowerCase().equals(bt.getName().toLowerCase())){
                                 if(tinydb.getString(bt.getName().toLowerCase()).isEmpty()){
                                     list.add(device.deviceName.toUpperCase() + "\n" + bt.getAddress().toString());
+                                    Log.d("aaaaoo", "pairedDevicesList: yh chala");
                                 }
                                 else{
                                     list.add(tinydb.getString(bt.getName().toLowerCase()));
+                                    Log.d("aaaaoo", "pairedDevicesList: woh chala");
+
                                 }
                             }
                         }
@@ -180,8 +183,8 @@ public class DeviceList extends AppCompatActivity {
                         String m_Text = "";
 
                         m_Text = input.getText().toString();
-                        tinydb.putString(nameAndAddressArr[1],m_Text);
-                        list.set(i,m_Text+ "\n" + nameAndAddressArr[1]);
+                        tinydb.putString(nameAndAddressArr[1].toLowerCase(),m_Text);
+                        list.set(i,m_Text+ "\n" + nameAndAddressArr[1].toLowerCase());
                         Toast.makeText(DeviceList.this, "YOu text : "+m_Text, Toast.LENGTH_SHORT).show();
                     }
                 });
