@@ -121,7 +121,7 @@ public class DeviceList extends AppCompatActivity {
                              registeredDevicesList) {
                             Device device= (Device) o;
                             if (device.deviceName.toLowerCase().equals(bt.getName().toLowerCase()))
-                                list.add(device.customDeviceName.toUpperCase() + "\n" + bt.getAddress().toString());
+                                list.add(device.deviceName.toUpperCase() + "\n" + bt.getAddress().toString());
                         }
 
                     }
@@ -137,6 +137,13 @@ public class DeviceList extends AppCompatActivity {
         final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.visible_devices_row, R.id.tv_visible_device_name, list);
         visibleDevices.setAdapter(adapter);
         visibleDevices.setOnItemClickListener(myListClickListener);
+        visibleDevices.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(DeviceList.this, ((TextView)view.findViewById(R.id.tv_visible_device_name)).getText(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
 
 

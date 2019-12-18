@@ -306,7 +306,7 @@ public class ledControl extends AppCompatActivity {
                 }
             }
         };
-        timerObj.schedule(timerTaskObj, 0, 10000);
+        timerObj.schedule(timerTaskObj, 0, 1000);
 
         autoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -466,78 +466,84 @@ public class ledControl extends AppCompatActivity {
                             if (data.equals(">")) {
                                 final String filterData = mData;
                                 Log.d("tester4", mData);
+                                if(mData.length()>6) {
+                                    if (mData.charAt(6) == '1') {
+                                        //Acknoledgement
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(ledControl.this, "Acknowledgement Received", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    } else {
+                                        String rtp = Character.toString(mData.charAt(3)) + Character.toString(mData.charAt(4));
+                                        try {
+                                            initial_temp_val = Integer.parseInt(rtp);
 
-                                if (mData.charAt(6) == '1') {
-                                    //Acknoledgement
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(ledControl.this, "Acknowledgement Received", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                } else {
-                                    String rtp = Character.toString(mData.charAt(3)) + Character.toString(mData.charAt(4));
-                                    try {
-                                        initial_temp_val = Integer.parseInt(rtp);
-                                    } catch (Exception e) {
-                                        Log.e("Exception", e.getMessage());
-                                    }
-                                    try {
-                                        roomTemp = Integer.parseInt(rtp);
+                                            roomTemp = Integer.parseInt(rtp);
 
-                                        if (tinydb.getInt("TempType") == 1)
-                                            roomTemp = (roomTemp * 9 / 5) + 32;
+                                            if (tinydb.getInt("TempType") == 1)
+                                                roomTemp = (roomTemp * 9 / 5) + 32;
 
-                                        Log.d("RTP: ", Integer.toString(roomTemp));
-                                        Log.d("Comparison", Character.compare(mData.charAt(2), '0') + "");
-                                        if (Character.compare(mData.charAt(2), '0') == 0) {
+                                            Log.d("RTP: ", Integer.toString(roomTemp));
+                                            Log.d("Comparison", Character.compare(mData.charAt(2), '0') + "");
+                                            if (Character.compare(mData.charAt(2), '0') == 0) {
 
 //                                        Log.d("DeltaT out",deltaT );
 //                                        if (deltaT.length() == 0)
 //                                        {
 //                                            Toast.makeText(ledControl.this, "Please set half point in settings", Toast.LENGTH_SHORT).show();
 //                                        }
-                                            if (setTempTextView.getText().toString().length() > 1 && deltaT.length() >= 1) {
-                                                int index = setTempTextView.getText().toString().indexOf("°");
-                                                int setTemp = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
-                                                Log.d("Set Temp: ", Integer.toString(setTemp));
-                                                int deltaTemp = Integer.parseInt(deltaT);
-                                                Log.d("delta Temp: ", Integer.toString(deltaTemp));
+                                                if (setTempTextView.getText().toString().length() > 1 && deltaT.length() >= 1) {
+                                                    int index = setTempTextView.getText().toString().indexOf("°");
+                                                    int setTemp = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
+                                                    Log.d("Set Temp: ", Integer.toString(setTemp));
+                                                    int deltaTemp = Integer.parseInt(deltaT);
+                                                    Log.d("delta Temp: ", Integer.toString(deltaTemp));
 
-                                                if ((roomTemp - setTemp) > 0)
-                                                    wingDirection = '2';
+                                                    if ((roomTemp - setTemp) > 0){
+                                                        wingDirection = '2';
+                                                        String setTempStr=Integer.toString(setTemp);
+                                                        char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
+                                                        sendSignal(b);
+                                                    }
 
-                                                else if ((roomTemp - setTemp) == 0)
-                                                    wingDirection = '0';
+                                                    else if ((roomTemp - setTemp) == 0) {
+                                                        wingDirection = '0';
+                                                        char b[] = {'<', '1', oppMode, '-', '-', wingDirection, '-', '>'};
+                                                        sendSignal(b);
 
+                                                    }
 //                                            else if ((roomTemp - setTemp) <= deltaTemp)
 //                                                wingDirection = '1';
 
+                                                }
                                             }
+                                        } catch (Exception e) {
+                                            Log.e("Unable to convert", e.getMessage());
                                         }
-                                    } catch (Exception e) {
-                                        Log.e("Unable to convert", e.getMessage());
+
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (tinydb.getInt("TempType") == 0) {
+                                                    tempTextView.setText(roomTemp + "°C");
+                                                    cg1.setPointSize((int) (roomTemp * 3.857));
+                                                    cg1.setVisibility(View.INVISIBLE);
+                                                    cg1.setVisibility(View.VISIBLE);
+                                                } else {
+                                                    tempTextView.setText(roomTemp + "°F");
+                                                    cg1.setPointSize((int) ((roomTemp - 32) * 2.1428));
+                                                    cg1.setVisibility(View.INVISIBLE);
+                                                    cg1.setVisibility(View.VISIBLE);
+
+                                                }
+                                            }
+                                        });
                                     }
-
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (tinydb.getInt("TempType") == 0) {
-                                                tempTextView.setText(roomTemp + "°C");
-                                                cg1.setPointSize((int) (roomTemp * 3.857));
-                                                cg1.setVisibility(View.INVISIBLE);
-                                                cg1.setVisibility(View.VISIBLE);
-                                            } else {
-                                                tempTextView.setText(roomTemp + "°F");
-                                                cg1.setPointSize((int) ((roomTemp - 32) * 2.1428));
-                                                cg1.setVisibility(View.INVISIBLE);
-                                                cg1.setVisibility(View.VISIBLE);
-
-                                            }
-                                        }
-                                    });
+                                }else{
+                                    Log.d("CustomErrorzz", "run: ganda format");
                                 }
-
                                 mData = "";
 
 
