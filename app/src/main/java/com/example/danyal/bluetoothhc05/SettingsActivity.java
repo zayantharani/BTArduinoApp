@@ -62,7 +62,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        rgTemperatureUnit = findViewById(R.id.rg_temp_units);
+        rgTemperatureUnit = findViewById(R.id.rg_temp_unitNew);
         tempUnit=tinydb.getInt("TempType");
 
         rgTemperatureUnit.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -79,7 +79,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
 
-        rgTemperatureMode = findViewById(R.id.rg_temp_units);
+        rgTemperatureMode = findViewById(R.id.rg_temp_unitNew);
         tempMode=tinydb.getInt("TempMode");
 
         rgTemperatureMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
