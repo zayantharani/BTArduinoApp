@@ -47,7 +47,6 @@
             android:text="Mode of Temperature"
             android:textColor="@color/textColour"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintTop_toBottomOf="@id/rg_temp_units"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
@@ -76,7 +75,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <RadioGroup
-            android:id="@+id/rg_temp_units"
+            android:id="@+id/rg_temp_unitNew"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"

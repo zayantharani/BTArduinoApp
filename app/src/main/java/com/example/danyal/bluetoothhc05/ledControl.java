@@ -114,7 +114,6 @@ public class ledControl extends AppCompatActivity {
         onOffSwitch = (Switch) findViewById(R.id.onOffSwitch);
         tempTextView = findViewById(R.id.tv_ac_temp);//Receiving
 
-        //TODO: Uncomment the line below and change the start activity.
         new ConnectBT().execute();
 
 
@@ -595,7 +594,16 @@ public class ledControl extends AppCompatActivity {
 
                         } catch (IOException e) {
                             e.printStackTrace();
+
+                            Intent intent = new Intent(ledControl.this, DeviceList.class);
+                            finish();
+                            Toast.makeText(ledControl.this, "Bluetooth Disconnected", Toast.LENGTH_SHORT).show();
+                            startActivity(intent);
+                            resetConnection();
+
                             break;
+
+
                         }
 
                     }
