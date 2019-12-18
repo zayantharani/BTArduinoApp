@@ -24,6 +24,8 @@ import java.util.ArrayList;
 public class SettingsActivity extends AppCompatActivity {
 
     RadioGroup rgTemperatureUnit;
+    RadioGroup rgTemperatureMode;
+
     RadioButton rbSelectedRadio;
     EditText etNewDeviceName;
     EditText etNewDeviceNameCustom;
@@ -33,6 +35,8 @@ public class SettingsActivity extends AppCompatActivity {
     static ArrayList<Device> deviceList;
     MyListAdapter adapter;
     int tempUnit = 0;
+    int tempMode = 0;
+
     TinyDB tinydb;
     EditText deltaTEditText;
     @Override
@@ -73,6 +77,24 @@ public class SettingsActivity extends AppCompatActivity {
                 tinydb.putInt("TempType",tempUnit);
             }
         });
+
+
+        rgTemperatureMode = findViewById(R.id.rg_temp_units);
+        tempMode=tinydb.getInt("TempMode");
+
+        rgTemperatureMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (i == R.id.rb_cold) {
+                    tempMode = 0;
+                }
+                else {
+                    tempMode = 1;
+                }
+                tinydb.putInt("TempMode",tempMode);
+            }
+        });
+
         if(tempUnit==0)rgTemperatureUnit.check(R.id.rb_celcius);
         else rgTemperatureUnit.check(R.id.rb_fahrenheit);
         rbSelectedRadio = findViewById(rgTemperatureUnit.getCheckedRadioButtonId());
