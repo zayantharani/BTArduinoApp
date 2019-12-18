@@ -155,7 +155,7 @@ public class DeviceList extends AppCompatActivity {
 
                 //Chaping
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(DeviceList.this, R.style.AlertDialogTheme);
+                AlertDialog.Builder builder = new AlertDialog.Builder(DeviceList.this);
                 builder.setTitle("Title");
 
                 // Set up the input
