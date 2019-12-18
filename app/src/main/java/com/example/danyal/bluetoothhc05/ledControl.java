@@ -304,7 +304,7 @@ public class ledControl extends AppCompatActivity {
                 }
             }
         };
-        timerObj.schedule(timerTaskObj, 0, 5000);
+        timerObj.schedule(timerTaskObj, 0, 1000);
 
         autoButton.setOnClickListener(new View.OnClickListener() {
             @Override
