@@ -11,12 +11,13 @@
         android:layout_height="match_parent"
         tools:context=".SettingActivity"
         android:id="@+id/settingsActivity">
+
         <EditText
             android:id="@+id/tv_temp_unit_no_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:clickable="false"
             android:cursorVisible="false"
@@ -29,32 +30,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/deltaTEditText" />
-
-
-
-
-
-        <EditText
-            android:id="@+id/tv_temp_unit_no_edit2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="10dp"
-            android:clickable="false"
-            android:cursorVisible="false"
-            android:textColor="@color/textColour"
-
-            android:ems="10"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:inputType="textPersonName"
-            android:text="Set Half Point"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
 
         <RadioGroup
             android:id="@+id/rg_temp_units"
@@ -173,24 +150,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText2" />
 
-        <EditText
-            android:id="@+id/et_new_device_name_custom"
-            android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/transparent"
-            android:ems="10"
-            android:hint="Custom name for Device here.."
-            android:inputType="textPersonName"
-            android:textColor="@color/textColour"
-            android:textColorHint="#90E9D9D9"
-            android:textSize="17sp"
-            app:layout_constraintEnd_toStartOf="@+id/iv_add_new_device"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_new_device_name" />
-
         <ImageView
             android:id="@+id/iv_add_new_device"
             android:layout_width="55dp"
@@ -207,7 +166,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="10dp"
             android:clickable="false"
             android:cursorVisible="false"
@@ -220,7 +179,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_new_device_name_custom" />
+            app:layout_constraintTop_toBottomOf="@+id/et_new_device_name" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_registered_devices"
@@ -239,20 +198,5 @@
             app:layout_constraintTop_toBottomOf="@+id/et_register_device_no_edit"
             app:layout_constraintVertical_bias="0.0" />
 
-        <EditText
-            android:id="@+id/deltaTEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter half temperature"
-            android:textColor="@color/textColour"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:textColorHint="#90E9D9D9"
-            android:ems="10"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_temp_unit_no_edit2" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

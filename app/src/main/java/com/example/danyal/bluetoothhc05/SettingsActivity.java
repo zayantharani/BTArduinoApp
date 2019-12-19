@@ -44,7 +44,6 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         tinydb = new TinyDB(SettingsActivity.this);
-        deltaTEditText = findViewById(R.id.deltaTEditText);
         deltaTEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -62,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        rgTemperatureUnit = findViewById(R.id.rg_temp_unitNew);
+        rgTemperatureUnit = findViewById(R.id.rg_temp_units);
         tempUnit=tinydb.getInt("TempType");
 
         rgTemperatureUnit.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -79,7 +78,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
 
-        rgTemperatureMode = findViewById(R.id.rg_temp_unitNew);
+        rgTemperatureMode = findViewById(R.id.rg_temp_mode);
         tempMode=tinydb.getInt("TempMode");
 
         rgTemperatureMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -105,7 +104,6 @@ public class SettingsActivity extends AppCompatActivity {
         btnAddNewDevice = findViewById(R.id.iv_add_new_device);
         rvRegisteredDevices = findViewById(R.id.rv_registered_devices);
 
-        etNewDeviceNameCustom=findViewById(R.id.et_new_device_name_custom);
 
         deviceList= new ArrayList<>();
         ArrayList<Object> pairedDevicesList=tinydb.getListObject("PairedDevices",Device.class);
