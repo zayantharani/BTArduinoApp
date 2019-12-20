@@ -49,9 +49,8 @@ public class ledControl extends AppCompatActivity {
     int initial_temp_val;
     TextView setTempTextView;
     ImageView bluetoothImageView, settingsImageView;
-    static Context context;
-    static char oppMode = 0;
-    static char wingDirection = 2;
+    static char oppMode = '0';
+    static char wingDirection = '2';
     int roomTemp;
     boolean wingOpenFlag = false;
 
@@ -304,7 +303,7 @@ public class ledControl extends AppCompatActivity {
                 }
             }
         };
-        timerObj.schedule(timerTaskObj, 0, 1000);
+        timerObj.schedule(timerTaskObj, 0, 10000); //TODO:Change the period to 1000.
 
         autoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -344,17 +343,13 @@ public class ledControl extends AppCompatActivity {
 //                    oneButton.setVisibility(View.VISIBLE);
                     twoButton.setVisibility(View.VISIBLE);
 
-                    if (wingOpenFlag)
-                    {
+                    if (wingOpenFlag) {
                         twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
                         zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
-                    }
-                    else
-                    {
+                    } else {
                         zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
                         twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
                     }
-
 
 
                 } else
@@ -504,13 +499,10 @@ public class ledControl extends AppCompatActivity {
                                                 roomTemp = (roomTemp * 9 / 5) + 32;
 
                                             Log.d("RTP: ", Integer.toString(roomTemp));
-                                            if (oppMode == 0) {
+                                            Log.d("OppMode: ", Character.toString(oppMode));
+                                            Log.d("SetTemp: ", setTempTextView.getText().toString().length() + "");
 
-//                                        Log.d("DeltaT out",deltaT );
-//                                        if (deltaT.length() == 0)
-//                                        {
-//                                            Toast.makeText(ledControl.this, "Please set half point in settings", Toast.LENGTH_SHORT).show();
-//                                        }
+                                            if (oppMode == '0') {
 
                                                 if (setTempTextView.getText().toString().length() > 1) {
                                                     int index = setTempTextView.getText().toString().indexOf("°");
@@ -522,7 +514,10 @@ public class ledControl extends AppCompatActivity {
                                                     //*********************For cooler mode*****************
 
                                                     if (tinydb.getInt("TempMode") == 0) {
+                                                        Log.d("Temp Mode: ", "Cool");
                                                         if ((roomTemp - setTemp) > 0) {
+                                                            Log.d("Status:", "Opening Wing");
+
                                                             if (!wingOpenFlag) {
                                                                 wingOpenFlag = true;
                                                                 Log.d("Automatic Status", "Sending 2 for wing direction");
@@ -538,6 +533,7 @@ public class ledControl extends AppCompatActivity {
 
 
                                                         } else if ((roomTemp - setTemp) <= 0) {
+                                                            Log.d("Status:", "Closing wing");
                                                             if (wingOpenFlag) {
                                                                 wingOpenFlag = false;
                                                                 Log.d("Automatic Status", "Sending 0 for wing direction");
@@ -551,6 +547,8 @@ public class ledControl extends AppCompatActivity {
                                                             }
                                                         }
                                                     } else {
+                                                        Log.d("Temp Mode: ", "Hot");
+
                                                         //*********************For heater mode*****************
                                                         //TODO: Add the UI for Mode of Operation in Settings and Save in Tiny dp. We'll check the mode from tiny dp and then perform opp.
                                                         if (setTemp > roomTemp) {
@@ -591,7 +589,9 @@ public class ledControl extends AppCompatActivity {
 
 //
 
-                                                }
+                                                } else
+                                                    Log.d("Set Temp: ", "Length is: " + setTempTextView.length());
+
                                             }
                                         } catch (Exception e) {
                                             Log.e("Unable to convert", e.getMessage());
