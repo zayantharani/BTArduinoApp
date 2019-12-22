@@ -123,7 +123,7 @@ public class DeviceList extends AppCompatActivity {
                                 registeredDevicesList) {
                             Device device = (Device) o;
                             if (device.deviceName.toUpperCase().equals(bt.getName().toUpperCase())) {
-                                if (tinydb.getString(bt.getName().toUpperCase()).isEmpty()) {
+                                if (tinydb.getString(bt.getAddress().toUpperCase()).isEmpty()) {
                                     list.add(device.deviceName.toUpperCase() + "\n" + bt.getAddress().toString());
                                     Log.d("checker012", "pairedDevicesList: yh chala");
                                 } else {
