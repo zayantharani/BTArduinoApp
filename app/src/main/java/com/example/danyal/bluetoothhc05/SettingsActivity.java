@@ -97,7 +97,7 @@ public class SettingsActivity extends AppCompatActivity {
 //                tinydb.getListString("PairedDevices");
         for (Object Objdevice : pairedDevicesList) {
             Device device = (Device) Objdevice;
-            deviceList.add(new Device(device.deviceName, device.customDeviceName));
+            deviceList.add(new Device(device.deviceName));
         }
         adapter = new MyListAdapter(deviceList);
         rvRegisteredDevices.setHasFixedSize(true);
@@ -108,10 +108,9 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //update the list view here
-                String customDeviceName = etNewDeviceNameCustom.getText().toString().toLowerCase();
-                String devicename = etNewDeviceName.getText().toString().toLowerCase();
-                if (!devicename.isEmpty() && !customDeviceName.isEmpty()) {
-                    Device newDevice = new Device(devicename, customDeviceName);
+                String devicename = etNewDeviceName.getText().toString().toUpperCase();
+                if (!devicename.isEmpty()) {
+                    Device newDevice = new Device(devicename);
                     deviceList.add(newDevice);
                     ArrayList<Object> pairedDevicesList = tinydb.getListObject("PairedDevices", Device.class);
                     pairedDevicesList.add(newDevice);
@@ -119,8 +118,6 @@ public class SettingsActivity extends AppCompatActivity {
                     tinydb.putListObject("PairedDevices", pairedDevicesList);
                     adapter.notifyChange();
                     etNewDeviceName.setText("");
-                    etNewDeviceNameCustom.setText("");
-                    Toast.makeText(SettingsActivity.this, customDeviceName + " Added.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -150,11 +147,11 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, final int position) {
             final Device device = devices.get(position);
-            holder.textViewDeviceName.setText(device.customDeviceName);
+            holder.textViewDeviceName.setText(device.deviceName);
             holder.imageViewDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(SettingsActivity.this, deviceList.get(position).customDeviceName + " Deleted.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, deviceList.get(position).deviceName + " Deleted.", Toast.LENGTH_SHORT).show();
                     ArrayList<Object> pairedDevicesList = tinydb.getListObject("PairedDevices", Device.class);
 //                    ArrayList<Device> pairedDevicesList=n
                     Log.d("POPOL", "onClick: " + pairedDevicesList.size());

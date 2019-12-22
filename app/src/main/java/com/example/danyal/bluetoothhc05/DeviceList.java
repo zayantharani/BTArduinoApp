@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -81,14 +80,12 @@ public class DeviceList extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    if(bAdapter == null)
-                    {
-                        Toast.makeText(getApplicationContext(),"Bluetooth Not Supported",Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        if(!bAdapter.isEnabled()){
-                            startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),1);
-                            Toast.makeText(getApplicationContext(),"Bluetooth Turned ON",Toast.LENGTH_SHORT).show();
+                    if (bAdapter == null) {
+                        Toast.makeText(getApplicationContext(), "Bluetooth Not Supported", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (!bAdapter.isEnabled()) {
+                            startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), 1);
+                            Toast.makeText(getApplicationContext(), "Bluetooth Turned ON", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -107,7 +104,7 @@ public class DeviceList extends AppCompatActivity {
         pairedDevices = bluetoothAdapter.getBondedDevices();
         final ArrayList list = new ArrayList();
         ArrayList<Object> registeredDevicesList;
-        registeredDevicesList = tinydb.getListObject("PairedDevices",Device.class);
+        registeredDevicesList = tinydb.getListObject("PairedDevices", Device.class);
         if (registeredDevicesList != null) {
             if (registeredDevicesList.size() == 0) {
                 Intent intent = new Intent(DeviceList.this, SettingsActivity.class);
@@ -116,22 +113,21 @@ public class DeviceList extends AppCompatActivity {
                 Toast.makeText(this, "Please register a device first", Toast.LENGTH_LONG).show();
             } else {
                 if (pairedDevices.size() > 0) {
-                    int i=0;
+                    int i = 0;
                     for (BluetoothDevice bt : pairedDevices) {
-                        Log.i("BTNAME","BT Name: " + bt.getName());
-                        if(i<registeredDevicesList.size()) {
+                        Log.i("BTNAME", "BT Name: " + bt.getName());
+                        if (i < registeredDevicesList.size()) {
 //                            Log.i("BTNAME", "Device Name: " + (Device)registeredDevicesList.get(i++).customDeviceName);
                         }
-                        for (Object o:
-                             registeredDevicesList) {
-                            Device device= (Device) o;
-                            if (device.deviceName.toLowerCase().equals(bt.getName().toLowerCase())){
-                                if(tinydb.getString(bt.getName().toLowerCase()).isEmpty()){
+                        for (Object o :
+                                registeredDevicesList) {
+                            Device device = (Device) o;
+                            if (device.deviceName.toUpperCase().equals(bt.getName().toUpperCase())) {
+                                if (tinydb.getString(bt.getName().toUpperCase()).isEmpty()) {
                                     list.add(device.deviceName.toUpperCase() + "\n" + bt.getAddress().toString());
                                     Log.d("aaaaoo", "pairedDevicesList: yh chala");
-                                }
-                                else{
-                                    list.add(tinydb.getString(bt.getName().toLowerCase()));
+                                } else {
+                                    list.add(tinydb.getString(bt.getName().toUpperCase()));
                                     Log.d("aaaaoo", "pairedDevicesList: woh chala");
 
                                 }
@@ -154,13 +150,10 @@ public class DeviceList extends AppCompatActivity {
         visibleDevices.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                String nameAndAddress=((TextView)view.findViewById(R.id.tv_visible_device_name)).getText().toString();
+                String nameAndAddress = ((TextView) view.findViewById(R.id.tv_visible_device_name)).getText().toString();
                 Toast.makeText(DeviceList.this, nameAndAddress, Toast.LENGTH_SHORT).show();
-                final String[] nameAndAddressArr=nameAndAddress.split("\n");
+                final String[] nameAndAddressArr = nameAndAddress.split("\n");
 //                tinydb.putString("");
-
-
-
 
 
                 //Chaping
@@ -182,10 +175,10 @@ public class DeviceList extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String m_Text = "";
 
-                        m_Text = input.getText().toString();
-                        tinydb.putString(nameAndAddressArr[1].toLowerCase(),m_Text);
-                        list.set(i,m_Text+ "\n" + nameAndAddressArr[1].toLowerCase());
-                        Toast.makeText(DeviceList.this, "YOu text : "+m_Text, Toast.LENGTH_SHORT).show();
+                        m_Text = input.getText().toString().toUpperCase();
+                        tinydb.putString(nameAndAddressArr[1].toUpperCase(), m_Text);
+                        list.set(i, m_Text + "\n" + nameAndAddressArr[1].toUpperCase());
+                        Toast.makeText(DeviceList.this, "YOu text : " + m_Text, Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -197,7 +190,6 @@ public class DeviceList extends AppCompatActivity {
 //                builder.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(neededColor);
 //                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(neededColor);
                 builder.show();
-
 
 
                 //chaping end
@@ -213,6 +205,7 @@ public class DeviceList extends AppCompatActivity {
 
             String info = ((TextView) view.findViewById(R.id.tv_visible_device_name)).getText().toString();
             String address = info.substring(info.length() - 17);
+            Log.d("Bt Address",address);
 
             Intent i = new Intent(DeviceList.this, ledControl.class);
             i.putExtra(EXTRA_ADDRESS, address);

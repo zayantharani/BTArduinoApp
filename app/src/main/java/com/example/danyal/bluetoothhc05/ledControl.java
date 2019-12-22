@@ -1,11 +1,9 @@
 package com.example.danyal.bluetoothhc05;
-//TODO:SetPoint Farhenheight wala chakkar
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -303,7 +301,7 @@ public class ledControl extends AppCompatActivity {
                 }
             }
         };
-        timerObj.schedule(timerTaskObj, 0, 10000); //TODO:Change the period to 1000.
+        timerObj.schedule(timerTaskObj, 0, 1000);
 
         autoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -344,9 +342,11 @@ public class ledControl extends AppCompatActivity {
                     twoButton.setVisibility(View.VISIBLE);
 
                     if (wingOpenFlag) {
+                        wingDirection = '2';
                         twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
                         zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
                     } else {
+                        wingDirection = '0';
                         zeroButton.setBackgroundColor(zeroButton.getContext().getResources().getColor(R.color.buttonColourEnabled));
                         twoButton.setBackgroundColor(twoButton.getContext().getResources().getColor(R.color.buttonColourDisabled));
                     }
@@ -520,9 +520,15 @@ public class ledControl extends AppCompatActivity {
 
                                                             if (!wingOpenFlag) {
                                                                 wingOpenFlag = true;
-                                                                Log.d("Automatic Status", "Sending 2 for wing direction");
-
                                                                 wingDirection = '2';
+
+                                                                Log.d("Automatic Status", "Sending 2 for wing direction");
+                                                                runOnUiThread(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        Toast.makeText(ledControl.this, "Wing opened", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                });
 
                                                                 String setTempStr = Integer.toString(setTemp);
                                                                 Log.d("SetTempStr", setTempStr);
@@ -536,9 +542,16 @@ public class ledControl extends AppCompatActivity {
                                                             Log.d("Status:", "Closing wing");
                                                             if (wingOpenFlag) {
                                                                 wingOpenFlag = false;
-                                                                Log.d("Automatic Status", "Sending 0 for wing direction");
-
                                                                 wingDirection = '0';
+
+                                                                Log.d("Automatic Status", "Sending 0 for wing direction");
+                                                                runOnUiThread(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        Toast.makeText(ledControl.this, "Wing closed", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                });
+
 
                                                                 String setTempStr = Integer.toString(setTemp);
                                                                 Log.d("SetTempStr", setTempStr);
@@ -550,7 +563,6 @@ public class ledControl extends AppCompatActivity {
                                                         Log.d("Temp Mode: ", "Hot");
 
                                                         //*********************For heater mode*****************
-                                                        //TODO: Add the UI for Mode of Operation in Settings and Save in Tiny dp. We'll check the mode from tiny dp and then perform opp.
                                                         if (setTemp > roomTemp) {
 
                                                             if ((setTemp - roomTemp) > 0) {
