@@ -127,7 +127,7 @@ public class DeviceList extends AppCompatActivity {
                                     list.add(device.deviceName.toUpperCase() + "\n" + bt.getAddress().toString());
                                     Log.d("checker012", "pairedDevicesList: yh chala");
                                 } else {
-                                    list.add(tinydb.getString(bt.getAddress().toUpperCase()));
+                                    list.add(tinydb.getString(bt.getAddress().toUpperCase())+"\n"+bt.getAddress().toUpperCase());
                                     Log.d("checker012", "pairedDevicesList: woh chala");
 
                                 }
