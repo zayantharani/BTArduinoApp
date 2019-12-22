@@ -125,10 +125,10 @@ public class DeviceList extends AppCompatActivity {
                             if (device.deviceName.toUpperCase().equals(bt.getName().toUpperCase())) {
                                 if (tinydb.getString(bt.getName().toUpperCase()).isEmpty()) {
                                     list.add(device.deviceName.toUpperCase() + "\n" + bt.getAddress().toString());
-                                    Log.d("aaaaoo", "pairedDevicesList: yh chala");
+                                    Log.d("checker012", "pairedDevicesList: yh chala");
                                 } else {
                                     list.add(tinydb.getString(bt.getName().toUpperCase()));
-                                    Log.d("aaaaoo", "pairedDevicesList: woh chala");
+                                    Log.d("checker012", "pairedDevicesList: woh chala");
 
                                 }
                             }
@@ -179,6 +179,7 @@ public class DeviceList extends AppCompatActivity {
                         tinydb.putString(nameAndAddressArr[1].toUpperCase(), m_Text);
                         list.set(i, m_Text + "\n" + nameAndAddressArr[1].toUpperCase());
                         Toast.makeText(DeviceList.this, "YOu text : " + m_Text, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DeviceList.this, tinydb.getString(nameAndAddressArr[1].toUpperCase()), Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
