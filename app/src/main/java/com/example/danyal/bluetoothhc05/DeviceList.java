@@ -33,6 +33,7 @@ public class DeviceList extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter = null;
     private Set<BluetoothDevice> pairedDevices;
     public static String EXTRA_ADDRESS = "device_address";
+    public  static String EXTRA_BT_NAME = "device_name";
     //    final BroadcastReceiver mReceiver =new MyBroadcastReceiver();
     TinyDB tinydb;
     private BroadcastReceiver blueReceiver;
@@ -205,10 +206,12 @@ public class DeviceList extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             String info = ((TextView) view.findViewById(R.id.tv_visible_device_name)).getText().toString();
+            String btName = info.substring(0, info.length() - 18);
             String address = info.substring(info.length() - 17);
             Log.d("Bt Address",address);
 
             Intent i = new Intent(DeviceList.this, ledControl.class);
+            i.putExtra(EXTRA_BT_NAME, btName);
             i.putExtra(EXTRA_ADDRESS, address);
             startActivity(i);
             finish();

@@ -1,5 +1,6 @@
 package com.example.danyal.bluetoothhc05;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -123,7 +124,11 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
 
+
+
     }
+
+
 
     public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
         ArrayList<Device> devices;
@@ -194,5 +199,7 @@ public class SettingsActivity extends AppCompatActivity {
                 this.cl = itemView.findViewById(R.id.constraint_layout_rv);
             }
         }
+
+
     }
 }

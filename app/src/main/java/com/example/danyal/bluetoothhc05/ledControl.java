@@ -45,12 +45,14 @@ public class ledControl extends AppCompatActivity {
     ImageView btnInc, btnDec;
     TextView tv_temp;
     int initial_temp_val;
-    TextView setTempTextView;
+    TextView setTempTextView, tv_bluetoothName;
     ImageView bluetoothImageView, settingsImageView;
     static char oppMode = '0';
     static char wingDirection = '2';
+    static char tempMode = '0';
     int roomTemp;
     boolean wingOpenFlag = false;
+    public static String EXTRA_ACTIVITY = "activity_called";
 
 
     private ProgressDialog progress;
@@ -63,13 +65,44 @@ public class ledControl extends AppCompatActivity {
     OutputStream outputStream;
     String deltaT;
     TinyDB tinydb;
-    static boolean switchIsChecked;
+    static boolean switchIsChecked = true;
 
-    int currentTempType = 0;
+    static int currentTempType = 0;
+    static char hotColdMode = '0';
+
+    void onCreateAndResume() {
+        if (currentTempType != tinydb.getInt("TempType")) {
+            currentTempType = tinydb.getInt("TempType");
+            String setTempText = setTempTextView.getText().toString().substring(0, setTempTextView.getText().toString().indexOf('°'));
+            if (setTempText.length() > 1) {
+                //Converting to centigrade
+                if (currentTempType == 0) {
+                    msg("Converting to Centigrade");
+
+                    Integer setTempInt = Integer.parseInt(setTempText);
+                    setTempInt = (setTempInt - 32) * 5 / 9;
+                    setTempText = setTempInt.toString();
+                    setTempTextView.setText(setTempText + "°C");
+
+                } else if (currentTempType == 1) {
+                    Integer setTempInt = Integer.parseInt(setTempText);
+                    setTempInt = (setTempInt) * 9 / 5 + 32;
+                    setTempText = setTempInt.toString();
+                    setTempTextView.setText(setTempText + "°F");
+
+                }
+            }
+        }
+
+        if (tempMode != (char) tinydb.getInt("TempMode")) {
+            tempMode = (char) tinydb.getInt("TempMode");
+        }
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        onCreateAndResume();
     }
 
     @Override
@@ -84,10 +117,11 @@ public class ledControl extends AppCompatActivity {
         tinydb = new TinyDB(ledControl.this);
 
         currentTempType = tinydb.getInt("TempType");
+        int setTempPoint = tinydb.getInt("setTempPoint");
         if (currentTempType == 0) {
-            initial_temp_val = 40;
+            initial_temp_val = setTempPoint;
         } else if (currentTempType == 1) {
-            initial_temp_val = 104;
+            initial_temp_val = setTempPoint;
         }
         setContentView(R.layout.activity_led_control);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -105,6 +139,7 @@ public class ledControl extends AppCompatActivity {
         btnInc = findViewById(R.id.btnIncrease);
         btnDec = findViewById(R.id.btnDecrease);
         settingsImageView = findViewById(R.id.settingsImageView);
+        tv_bluetoothName = findViewById(R.id.tv_bluetoothName);
 
         sendSignalButton = (Button) findViewById(R.id.sendSignalButton);
         setTempTextView = (TextView) findViewById(R.id.tv_currentTemp); //Sending
@@ -113,7 +148,22 @@ public class ledControl extends AppCompatActivity {
         onOffSwitch = (Switch) findViewById(R.id.onOffSwitch);
         tempTextView = findViewById(R.id.tv_ac_temp);//Receiving
 
-        new ConnectBT().execute();
+
+        try {
+            new ConnectBT().execute();
+        } catch (Exception e) {
+
+        }
+
+        if (getIntent().getStringExtra(DeviceList.EXTRA_BT_NAME) != null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tv_bluetoothName.setText(getIntent().getStringExtra(DeviceList.EXTRA_BT_NAME));
+                    Toast.makeText(ledControl.this, "Connected to " + getIntent().getStringExtra(DeviceList.EXTRA_BT_NAME), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
 
         cg1.setPointSize(0);
@@ -122,6 +172,8 @@ public class ledControl extends AppCompatActivity {
         cg1.setPointStartColor(Color.parseColor("#00FF2B"));
         cg1.setPointEndColor(Color.parseColor("#FF0000"));
 
+
+        onCreateAndResume();
 
         if (tinydb.getInt("TempType") == 0) {
             roomTemp = Integer.parseInt(tempTextView.getText().toString().substring(0, tempTextView.getText().toString().length() - 2));
@@ -173,7 +225,7 @@ public class ledControl extends AppCompatActivity {
                     if (c_temp_val <= 70) {
 
                         setTempTextView.setText(c_temp_val + "°C");
-
+                        tinydb.putInt("setTempPoint", c_temp_val);
 //                        int x = (int)Math.ceil(cg1.getPointSize() + 3.857);
 //                        if(x>270)x=270;
 //                        cg1.setPointSize(x);
@@ -194,6 +246,8 @@ public class ledControl extends AppCompatActivity {
                     if (c_temp_val >= 0) {
 
                         setTempTextView.setText(c_temp_val + "°C");
+                        tinydb.putInt("setTempPoint", c_temp_val);
+
                         int x = (int) Math.floor(cg1.getPointSize() - 3.857);
                         if (x < 0) x = 0;
 
@@ -229,6 +283,7 @@ public class ledControl extends AppCompatActivity {
                     if (c_temp_val <= 158) {
 
                         setTempTextView.setText(c_temp_val + "°F");
+                        tinydb.putInt("setTempPoint", c_temp_val);
 
 //                        int x = (int)Math.ceil(cg1.getPointSize() + 2.1428);
 //                        if(x>270)x=270;
@@ -250,6 +305,8 @@ public class ledControl extends AppCompatActivity {
                     if (c_temp_val >= 32) {
 
                         setTempTextView.setText(c_temp_val + "°F");
+                        tinydb.putInt("setTempPoint", c_temp_val);
+
 //                        int x = (int)Math.floor(cg1.getPointSize() - 2.1428);
 //                        if(x<0)x=0;
 //                        cg1.setPointSize(x);
@@ -268,10 +325,11 @@ public class ledControl extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ledControl.this, SettingsActivity.class);
+                intent.putExtra(EXTRA_ACTIVITY, "ledControl");
                 startActivity(intent);
-
             }
         });
+
 
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -279,10 +337,10 @@ public class ledControl extends AppCompatActivity {
                 if (isChecked) {
                     switchIsChecked = true;
                     onOffSwitch.setText("On");
-                    char b[] = {'<', '1', '-', '-', '-', '-', '-', '>'};
+                    char b[] = {'<', tempMode, '-', '-', '-', '-', '-', '>'};
                     sendSignal(b);
                 } else {
-                    char b[] = {'<', '0', '-', '-', '-', '-', '-', '>'};
+                    char b[] = {'<', tempMode, '-', '-', '-', '-', '-', '>'};
                     sendSignal(b);
                     switchIsChecked = false;
                     onOffSwitch.setText("Off");
@@ -295,7 +353,7 @@ public class ledControl extends AppCompatActivity {
         TimerTask timerTaskObj = new TimerTask() {
             public void run() {
                 if (switchIsChecked) {
-                    char b[] = {'<', '1', oppMode, '?', '?', wingDirection, '-', '>'};
+                    char b[] = {'<', tempMode, oppMode, '?', '?', wingDirection, '-', '>'};
                     sendSignal(b);
                     msg("Signal Sent");
                 }
@@ -424,7 +482,7 @@ public class ledControl extends AppCompatActivity {
                             setTempText = setTempInt.toString();
                         }
 
-                        char b[] = {'<', '1', oppMode, setTempText.charAt(0), setTempText.charAt(1), wingDirection, '-', '>'};
+                        char b[] = {'<', tempMode, oppMode, setTempText.charAt(0), setTempText.charAt(1), wingDirection, '-', '>'};
                         sendSignal(b);
                         msg("Signal Sent");
 
@@ -469,101 +527,102 @@ public class ledControl extends AppCompatActivity {
                 int bytes;
                 String mData = "";
                 while (isBtConnected) {
+                    if (btSocket != null) {
+                        if (btSocket.isConnected()) {
+                            try {
+                                bytes = inputStream.read(buffer);
+                                String data = new String(buffer);
 
-                    if (btSocket.isConnected()) {
-                        try {
-                            bytes = inputStream.read(buffer);
-                            String data = new String(buffer);
+                                Log.d("tester3", "" + data);
+                                if (data.equals(">")) {
+                                    final String filterData = mData;
+                                    Log.d("tester4", mData);
+                                    if (mData.length() > 6) {
+                                        if (mData.charAt(6) == '1') {
+                                            //Acknoledgement
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(ledControl.this, "Acknowledgement Received", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        } else {
+                                            String rtp = Character.toString(mData.charAt(3)) + Character.toString(mData.charAt(4));
+                                            try {
+                                                initial_temp_val = Integer.parseInt(rtp);
 
-                            Log.d("tester3", "" + data);
-                            if (data.equals(">")) {
-                                final String filterData = mData;
-                                Log.d("tester4", mData);
-                                if (mData.length() > 6) {
-                                    if (mData.charAt(6) == '1') {
-                                        //Acknoledgement
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(ledControl.this, "Acknowledgement Received", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    } else {
-                                        String rtp = Character.toString(mData.charAt(3)) + Character.toString(mData.charAt(4));
-                                        try {
-                                            initial_temp_val = Integer.parseInt(rtp);
+                                                roomTemp = Integer.parseInt(rtp);
 
-                                            roomTemp = Integer.parseInt(rtp);
+                                                if (tinydb.getInt("TempType") == 1)
+                                                    roomTemp = (roomTemp * 9 / 5) + 32;
 
-                                            if (tinydb.getInt("TempType") == 1)
-                                                roomTemp = (roomTemp * 9 / 5) + 32;
+                                                Log.d("RTP: ", Integer.toString(roomTemp));
+                                                Log.d("OppMode: ", Character.toString(oppMode));
+                                                Log.d("SetTemp: ", setTempTextView.getText().toString().length() + "");
+                                                Log.d("TempMode", Character.toString(tempMode));
 
-                                            Log.d("RTP: ", Integer.toString(roomTemp));
-                                            Log.d("OppMode: ", Character.toString(oppMode));
-                                            Log.d("SetTemp: ", setTempTextView.getText().toString().length() + "");
+                                                if (oppMode == '0') {
 
-                                            if (oppMode == '0') {
-
-                                                if (setTempTextView.getText().toString().length() > 1) {
-                                                    int index = setTempTextView.getText().toString().indexOf("°");
-                                                    int setTemp = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
-                                                    Log.d("Set Temp: ", Integer.toString(setTemp));
+                                                    if (setTempTextView.getText().toString().length() > 1) {
+                                                        int index = setTempTextView.getText().toString().indexOf("°");
+                                                        int setTemp = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
+                                                        Log.d("Set Temp: ", Integer.toString(setTemp));
 //                                                int deltaTemp = Integer.parseInt(deltaT);
 //                                                Log.d("delta Temp: ", Integer.toString(deltaTemp));
 
-                                                    //*********************For cooler mode*****************
+                                                        //*********************For cooler mode*****************
 
-                                                    if (tinydb.getInt("TempMode") == 0) {
-                                                        Log.d("Temp Mode: ", "Cool");
-                                                        if ((roomTemp - setTemp) > 0) {
-                                                            Log.d("Status:", "Opening Wing");
+                                                        if (tinydb.getInt("TempMode") == 0) {
+                                                            Log.d("Temp Mode: ", "Cool");
+                                                            if ((roomTemp - setTemp) > 0) {
+                                                                Log.d("Status:", "Opening Wing");
 
-                                                            if (!wingOpenFlag) {
-                                                                wingOpenFlag = true;
-                                                                wingDirection = '2';
+                                                                if (!wingOpenFlag) {
+                                                                    wingOpenFlag = true;
+                                                                    wingDirection = '2';
 
-                                                                Log.d("Automatic Status", "Sending 2 for wing direction");
-                                                                runOnUiThread(new Runnable() {
-                                                                    @Override
-                                                                    public void run() {
-                                                                        Toast.makeText(ledControl.this, "Wing opened", Toast.LENGTH_SHORT).show();
-                                                                    }
-                                                                });
+                                                                    Log.d("Automatic Status", "Sending 2 for wing direction");
+                                                                    runOnUiThread(new Runnable() {
+                                                                        @Override
+                                                                        public void run() {
+                                                                            Toast.makeText(ledControl.this, "Wing opened", Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    });
 
-                                                                String setTempStr = Integer.toString(setTemp);
-                                                                Log.d("SetTempStr", setTempStr);
+                                                                    String setTempStr = Integer.toString(setTemp);
+                                                                    Log.d("SetTempStr", setTempStr);
 
-                                                                char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
-                                                                sendSignal(b);
+                                                                    char b[] = {'<', tempMode, oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
+                                                                    sendSignal(b);
+                                                                }
+
+
+                                                            } else if ((roomTemp - setTemp) <= 0) {
+                                                                Log.d("Status:", "Closing wing");
+                                                                if (wingOpenFlag) {
+                                                                    wingOpenFlag = false;
+                                                                    wingDirection = '0';
+
+                                                                    Log.d("Automatic Status", "Sending 0 for wing direction");
+                                                                    runOnUiThread(new Runnable() {
+                                                                        @Override
+                                                                        public void run() {
+                                                                            Toast.makeText(ledControl.this, "Wing closed", Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    });
+
+
+                                                                    String setTempStr = Integer.toString(setTemp);
+                                                                    Log.d("SetTempStr", setTempStr);
+                                                                    char b[] = {'<', tempMode, oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
+                                                                    sendSignal(b);
+                                                                }
                                                             }
+                                                        } else {
+                                                            Log.d("Temp Mode: ", "Hot");
 
+                                                            //*********************For heater mode*****************
 
-                                                        } else if ((roomTemp - setTemp) <= 0) {
-                                                            Log.d("Status:", "Closing wing");
-                                                            if (wingOpenFlag) {
-                                                                wingOpenFlag = false;
-                                                                wingDirection = '0';
-
-                                                                Log.d("Automatic Status", "Sending 0 for wing direction");
-                                                                runOnUiThread(new Runnable() {
-                                                                    @Override
-                                                                    public void run() {
-                                                                        Toast.makeText(ledControl.this, "Wing closed", Toast.LENGTH_SHORT).show();
-                                                                    }
-                                                                });
-
-
-                                                                String setTempStr = Integer.toString(setTemp);
-                                                                Log.d("SetTempStr", setTempStr);
-                                                                char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
-                                                                sendSignal(b);
-                                                            }
-                                                        }
-                                                    } else {
-                                                        Log.d("Temp Mode: ", "Hot");
-
-                                                        //*********************For heater mode*****************
-                                                        if (setTemp > roomTemp) {
 
                                                             if ((setTemp - roomTemp) > 0) {
                                                                 if (!wingOpenFlag) {
@@ -571,11 +630,17 @@ public class ledControl extends AppCompatActivity {
                                                                     Log.d("Automatic Status", "Sending 2 for wing direction");
 
                                                                     wingDirection = '2';
+                                                                    runOnUiThread(new Runnable() {
+                                                                        @Override
+                                                                        public void run() {
+                                                                            Toast.makeText(ledControl.this, "Wing opened", Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    });
 
                                                                     String setTempStr = Integer.toString(setTemp);
                                                                     Log.d("SetTempStr", setTempStr);
 
-                                                                    char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
+                                                                    char b[] = {'<', tempMode, oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
                                                                     sendSignal(b);
                                                                 }
 
@@ -584,79 +649,83 @@ public class ledControl extends AppCompatActivity {
                                                                     wingOpenFlag = false;
                                                                     Log.d("Automatic Status", "Sending 0 for wing direction");
 
+                                                                    runOnUiThread(new Runnable() {
+                                                                        @Override
+                                                                        public void run() {
+                                                                            Toast.makeText(ledControl.this, "Wing closed", Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    });
                                                                     wingDirection = '0';
 
                                                                     String setTempStr = Integer.toString(setTemp);
                                                                     Log.d("SetTempStr", setTempStr);
-                                                                    char b[] = {'<', '1', oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
+                                                                    char b[] = {'<', tempMode, oppMode, setTempStr.charAt(0), setTempStr.charAt(1), wingDirection, '-', '>'};
                                                                     sendSignal(b);
                                                                 }
                                                             }
 
-                                                        } else {
-                                                            Toast.makeText(ledControl.this, "Please increase Set Temperature", Toast.LENGTH_SHORT).show();
+
                                                         }
-                                                    }
 
 
 //
 
-                                                } else
-                                                    Log.d("Set Temp: ", "Length is: " + setTempTextView.length());
-
-                                            }
-                                        } catch (Exception e) {
-                                            Log.e("Unable to convert", e.getMessage());
-                                        }
-
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (tinydb.getInt("TempType") == 0) {
-                                                    tempTextView.setText(roomTemp + "°C");
-                                                    cg1.setPointSize((int) (roomTemp * 3.857));
-                                                    cg1.setVisibility(View.INVISIBLE);
-                                                    cg1.setVisibility(View.VISIBLE);
-                                                } else {
-                                                    tempTextView.setText(roomTemp + "°F");
-                                                    cg1.setPointSize((int) ((roomTemp - 32) * 2.1428));
-                                                    cg1.setVisibility(View.INVISIBLE);
-                                                    cg1.setVisibility(View.VISIBLE);
+                                                    } else
+                                                        Log.d("Set Temp: ", "Length is: " + setTempTextView.length());
 
                                                 }
+                                            } catch (Exception e) {
+                                                Log.e("Unable to convert", e.getMessage());
                                             }
-                                        });
+
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (tinydb.getInt("TempType") == 0) {
+                                                        tempTextView.setText(roomTemp + "°C");
+                                                        cg1.setPointSize((int) (roomTemp * 3.857));
+                                                        cg1.setVisibility(View.INVISIBLE);
+                                                        cg1.setVisibility(View.VISIBLE);
+                                                    } else {
+                                                        tempTextView.setText(roomTemp + "°F");
+                                                        cg1.setPointSize((int) ((roomTemp - 32) * 2.1428));
+                                                        cg1.setVisibility(View.INVISIBLE);
+                                                        cg1.setVisibility(View.VISIBLE);
+
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    } else {
+                                        Log.d("CustomErrorzz", "run: ganda format");
                                     }
+                                    mData = "";
+
+
                                 } else {
-                                    Log.d("CustomErrorzz", "run: ganda format");
+                                    mData += data;
                                 }
-                                mData = "";
 
 
-                            } else {
-                                mData += data;
+                            } catch (IOException e) {
+                                e.printStackTrace();
+
+                                Intent intent = new Intent(ledControl.this, DeviceList.class);
+                                finish();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(ledControl.this, "Bluetooth Disconnected", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                startActivity(intent);
+                                resetConnection();
+
+                                break;
+
+
                             }
-
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-
-                            Intent intent = new Intent(ledControl.this, DeviceList.class);
-                            finish();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(ledControl.this, "Bluetooth Disconnected", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                            startActivity(intent);
-                            resetConnection();
-
-                            break;
-
-
                         }
-
                     }
 
                 }
@@ -664,6 +733,7 @@ public class ledControl extends AppCompatActivity {
             }
         }).start();
     }
+
 
     private void resetConnection() {
         if (inputStream != null) {
@@ -728,6 +798,8 @@ public class ledControl extends AppCompatActivity {
                     outputStream.write(number[i]);
             } catch (IOException e) {
                 msg("Error");
+            } catch (Exception e) {
+                msg("CRASHEDDDDD");
             }
 
         }
@@ -740,6 +812,8 @@ public class ledControl extends AppCompatActivity {
                 btSocket.close();
             } catch (IOException e) {
                 msg("Error");
+            } catch (Exception e) {
+                msg("CRASHED fff");
             }
         }
 
@@ -777,6 +851,16 @@ public class ledControl extends AppCompatActivity {
                 }
             } catch (IOException e) {
                 ConnectSuccess = false;
+            } catch (Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(ledControl.this, "Bluetooth Device not connected", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ledControl.this, DeviceList.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
             }
 
             return null;
@@ -787,7 +871,9 @@ public class ledControl extends AppCompatActivity {
             super.onPostExecute(result);
 
             if (!ConnectSuccess) {
-                msg("Connection Failed. Is it a SPP Bluetooth? Try again.");
+                Toast.makeText(ledControl.this, "Connection Failed. Is it a SPP Bluetooth? Try again.", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ledControl.this, DeviceList.class);
+                startActivity(intent);
                 finish();
             } else {
                 msg("Connected");
