@@ -97,12 +97,21 @@ public class ledControl extends AppCompatActivity {
         if (tempMode != (char) tinydb.getInt("TempMode")) {
             tempMode = (char) tinydb.getInt("TempMode");
         }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         onCreateAndResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
     }
 
     @Override
@@ -149,11 +158,11 @@ public class ledControl extends AppCompatActivity {
         tempTextView = findViewById(R.id.tv_ac_temp);//Receiving
 
 
-        try {
-            new ConnectBT().execute();
-        } catch (Exception e) {
-
-        }
+//        try {
+//            new ConnectBT().execute();
+//        } catch (Exception e) {
+//
+//        }
 
         if (getIntent().getStringExtra(DeviceList.EXTRA_BT_NAME) != null) {
             runOnUiThread(new Runnable() {
@@ -190,135 +199,70 @@ public class ledControl extends AppCompatActivity {
             cg1.setVisibility(View.VISIBLE);
 
         }
-        if (currentTempType == 0) {// Celcius
 
+        bluetoothImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-//            cg1.setPointSize((int)(initial_temp_val * 3.857));
+                Intent intent = new Intent(ledControl.this, DeviceList.class);
+                finish();
+                startActivity(intent);
+                resetConnection();
+
+            }
+        });
+
+        if (tinydb.getInt("TempType") == 0) {// Celcius
+
 
             setTempTextView.setText(initial_temp_val + "°C");
 
-//            cg1.setVisibility(View.INVISIBLE);
-//            cg1.setVisibility(View.VISIBLE);
-
-
             btnInc.setClickable(true);
             btnDec.setClickable(true);
-
-            bluetoothImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Intent intent = new Intent(ledControl.this, DeviceList.class);
-                    finish();
-                    startActivity(intent);
-                    resetConnection();
-
-                }
-            });
-
-            btnInc.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int index = setTempTextView.getText().toString().indexOf("°");
-                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
-                    c_temp_val++;
-                    if (c_temp_val <= 70) {
-
-                        setTempTextView.setText(c_temp_val + "°C");
-                        tinydb.putInt("setTempPoint", c_temp_val);
-//                        int x = (int)Math.ceil(cg1.getPointSize() + 3.857);
-//                        if(x>270)x=270;
-//                        cg1.setPointSize(x);
-//                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
-//                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
-//                        cg1.setVisibility(View.INVISIBLE);
-//                        cg1.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
-            btnDec.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int index = setTempTextView.getText().toString().indexOf("°");
-                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
-                    c_temp_val--;
-
-                    if (c_temp_val >= 0) {
-
-                        setTempTextView.setText(c_temp_val + "°C");
-                        tinydb.putInt("setTempPoint", c_temp_val);
-
-                        int x = (int) Math.floor(cg1.getPointSize() - 3.857);
-                        if (x < 0) x = 0;
-
-//                        cg1.setPointSize(x);
-//                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
-//                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
-//
-//                        cg1.setVisibility(View.INVISIBLE);
-//                        cg1.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
-        } else if (currentTempType == 1) {
+        } else if (tinydb.getInt("TempType") == 1) {
 //            cg1.setPointSize((int)((initial_temp_val - 32) * 2.1428));
 
 //            initial_temp_val = (initial_temp_val * 9 / 5) + 32;
-            setTempTextView.setText(initial_temp_val + "°F");
-
-
-//            cg1.setVisibility(View.INVISIBLE);
-//            cg1.setVisibility(View.VISIBLE);
-
-
             btnInc.setClickable(true);
             btnDec.setClickable(true);
-
-            btnInc.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int index = setTempTextView.getText().toString().indexOf("°");
-                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
-                    c_temp_val++;
-                    if (c_temp_val <= 158) {
-
-                        setTempTextView.setText(c_temp_val + "°F");
-                        tinydb.putInt("setTempPoint", c_temp_val);
-
-//                        int x = (int)Math.ceil(cg1.getPointSize() + 2.1428);
-//                        if(x>270)x=270;
-//                        cg1.setPointSize(x);
-//                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
-//                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
-//                        cg1.setVisibility(View.INVISIBLE);
-//                        cg1.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
-            btnDec.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int index = setTempTextView.getText().toString().indexOf("°");
-                    int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
-                    c_temp_val--;
-
-                    if (c_temp_val >= 32) {
-
-                        setTempTextView.setText(c_temp_val + "°F");
-                        tinydb.putInt("setTempPoint", c_temp_val);
-
-//                        int x = (int)Math.floor(cg1.getPointSize() - 2.1428);
-//                        if(x<0)x=0;
-//                        cg1.setPointSize(x);
-//                        cg1.setPointStartColor(Color.parseColor("#00FF2B"));
-//                        cg1.setPointEndColor(Color.parseColor("#FF0000"));
-//
-//                        cg1.setVisibility(View.INVISIBLE);
-//                        cg1.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
+            setTempTextView.setText(initial_temp_val + "°F");
         }
+
+
+        btnInc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int index = setTempTextView.getText().toString().indexOf("°");
+                int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
+                c_temp_val++;
+
+                if (tinydb.getInt("TempType") == 0)
+                    setTempTextView.setText(c_temp_val + "°C");
+                else if (tinydb.getInt("TempType") == 1)
+                    setTempTextView.setText(c_temp_val + "°F");
+
+
+                tinydb.putInt("setTempPoint", c_temp_val);
+
+            }
+        });
+        btnDec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int index = setTempTextView.getText().toString().indexOf("°");
+                int c_temp_val = Integer.parseInt(setTempTextView.getText().toString().substring(0, index).trim());
+                c_temp_val--;
+
+                if (tinydb.getInt("TempType") == 0)
+                    setTempTextView.setText(c_temp_val + "°C");
+                else if (tinydb.getInt("TempType") == 1)
+                    setTempTextView.setText(c_temp_val + "°F");
+
+                tinydb.putInt("setTempPoint", c_temp_val);
+
+            }
+        });
+
 
         //////////////////////////////////////////
         settingsImageView.setOnClickListener(new View.OnClickListener() {
