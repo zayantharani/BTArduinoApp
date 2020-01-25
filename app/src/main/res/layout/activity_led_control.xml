@@ -85,8 +85,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="88dp"
         android:layout_marginTop="92dp"
-        android:background="@color/buttonColourDisabled"
         android:text="MANUAL"
+        android:background="@drawable/button_rounded"
         android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -97,8 +97,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"
         android:layout_marginEnd="96dp"
-        android:background="@color/buttonColourEnabled"
         android:text="AUTO"
+        android:background="@color/buttonColourDisabled"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

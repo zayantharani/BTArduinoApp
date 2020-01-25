@@ -158,11 +158,11 @@ public class ledControl extends AppCompatActivity {
         tempTextView = findViewById(R.id.tv_ac_temp);//Receiving
 
 
-//        try {
-//            new ConnectBT().execute();
-//        } catch (Exception e) {
-//
-//        }
+        try {
+            new ConnectBT().execute();
+        } catch (Exception e) {
+
+        }
 
         if (getIntent().getStringExtra(DeviceList.EXTRA_BT_NAME) != null) {
             runOnUiThread(new Runnable() {
