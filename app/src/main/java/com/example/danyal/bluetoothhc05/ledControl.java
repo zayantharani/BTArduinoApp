@@ -47,6 +47,7 @@ public class ledControl extends AppCompatActivity {
     int initial_temp_val;
     TextView setTempTextView, tv_bluetoothName;
     ImageView bluetoothImageView, settingsImageView;
+    ImageView btnCold,btnHot;
     static char oppMode = '0';
     static char wingDirection = '2';
     static char tempMode = '0';
@@ -147,11 +148,14 @@ public class ledControl extends AppCompatActivity {
         cg1 = findViewById(R.id.gauge1);
         btnInc = findViewById(R.id.btnIncrease);
         btnDec = findViewById(R.id.btnDecrease);
+        btnCold = findViewById(R.id.btn_cold);
+        btnHot = findViewById(R.id.btn_hot);
         settingsImageView = findViewById(R.id.settingsImageView);
         tv_bluetoothName = findViewById(R.id.tv_bluetoothName);
 
         sendSignalButton = (Button) findViewById(R.id.sendSignalButton);
         setTempTextView = (TextView) findViewById(R.id.tv_currentTemp); //Sending
+
 //        deltaTEditText = (EditText) findViewById(R.id.deltaTEditText);
         bluetoothImageView = findViewById(R.id.bluetoothImageview);
         onOffSwitch = (Switch) findViewById(R.id.onOffSwitch);
@@ -209,6 +213,31 @@ public class ledControl extends AppCompatActivity {
                 startActivity(intent);
                 resetConnection();
 
+            }
+        });
+
+        if(tinydb.getInt("TempMode") == 0){
+            btnCold.setEnabled(true);
+            btnHot.setEnabled(false);
+        }else{
+            btnCold.setEnabled(false);
+            btnHot.setEnabled(true);
+        }
+
+
+        btnCold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnHot.setEnabled(false);
+                Toast.makeText(ledControl.this, "Cold Mode Activated", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        btnHot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnCold.setEnabled(false);
+                Toast.makeText(ledControl.this, "Hot Mode Activated", Toast.LENGTH_LONG).show();
             }
         });
 
